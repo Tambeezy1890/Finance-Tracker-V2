@@ -218,3 +218,26 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     message: "Password updated successfully",
   });
 });
+
+export const getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ _id: req.user }).select("-password");
+  if (!user) {
+    throw new ApiError(400, "Failed to get user");
+  }
+  res.status(200).json({ success: true, data: user });
+});
+
+export const userDashboard = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ _id: req.user }).select("-password");
+  if (!user) {
+    throw new ApiError(400, "Failed to get dashboard");
+  }
+  res.status(200).json({ success: true, message: "User dashboard " });
+});
+export const adminDashboard = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ _id: req.user }).select("-password");
+  if (!user) {
+    throw new ApiError(400, "Failed to get admin dashboard");
+  }
+  res.status(200).json({ success: true, message: "admin dashboard" });
+});

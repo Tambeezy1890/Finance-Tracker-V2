@@ -16,14 +16,23 @@ export const errorMiddleware = (err, req, res, next) => {
       };
     });
   }
-  if (err.code == "E11000") {
+  if (err.name == "E11000") {
     statusCode = 400;
     message = "Duplicate field entered";
-    errors = Object.values(err.errors).map((error) => ({
+    errors = Object.keys(err.keyValues).map((error) => ({
       field: error.path,
       message: error.message,
       value: error.value,
     }));
+  }
+  if (err.name == "Internal Server Error") {
+    errors = Object.values(err.errors || {}).map((error) => {
+      return {
+        field: error.path,
+        message: error.msg || error.message,
+        value: error.value,
+      };
+    });
   }
 
   res.status(statusCode).json({

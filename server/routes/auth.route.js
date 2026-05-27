@@ -2,16 +2,19 @@ import { Router } from "express";
 import {
   forgotPassword,
   generateNewAccessToken,
+  getUser,
   loginUser,
   logoutUser,
   resendEmailVerificationToken,
   resetPassword,
   signup,
+  userDashboard,
   verifyEmailToken,
   verifyPasswordToken,
 } from "../controllers/auth.controller.js";
 import { sendVerificationEmail } from "../util/emailService.js";
 import { body } from "express-validator";
+import { authorizeRoles, protect } from "../middleware/auth.middleware.js";
 
 const authRoute = Router();
 
@@ -66,10 +69,16 @@ authRoute.post("/forgot-password", forgotPassword);
 authRoute.get("/reset-password/:token", verifyPasswordToken);
 authRoute.get("/verify-email/:token", verifyEmailToken);
 authRoute.get("/logout", logoutUser);
+authRoute.get("/me", protect, getUser);
+authRoute.get(
+  "/user-dashboard",
+  protect,
+  authorizeRoles("user"),
+  userDashboard,
+);
 
 authRoute.patch("/reset-password/:token", passwordValidation, resetPassword);
 
-authRoute.get("/me", (req, res) => null);
 authRoute.patch("/update-user/:id", (req, res) => null);
 authRoute.delete("/delete-user/:id", (req, res) => null);
 

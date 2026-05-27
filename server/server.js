@@ -3,10 +3,19 @@ import { PORT } from "./config/env.js";
 import connectDatabase from "./config/mongodb.js";
 import authRoute from "./routes/auth.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
-
+import cors from "cors";
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    methods: ["POST", "GET", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
 
 app.get("/", (req, res) => {
   res.send("Server Live");

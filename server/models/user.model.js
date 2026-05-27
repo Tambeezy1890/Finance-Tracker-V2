@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { ApiError } from "../services/apiError.js";
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -44,14 +45,14 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
     return;
   }
   try {
     this.password = await bcrypt.hash(this.password, 10);
   } catch (err) {
-    next(err);
+    throw new ApiError(500, "Failed to hash password", err);
   }
 });
 
@@ -62,7 +63,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 userSchema.methods.getEmailVerificationToken = function () {
   const verificationToken = crypto.randomBytes(20).toString("hex");
   this.emailVerificationToken = crypto
-    .createHash("sha-256")
+    .createHash("sha256")
     .update(verificationToken)
     .digest("hex");
 
@@ -75,7 +76,7 @@ userSchema.methods.getEmailVerificationToken = function () {
 userSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
   this.resetPasswordToken = crypto
-    .createHash("sha-256")
+    .createHash("sha256")
     .update(resetToken)
     .digest("hex");
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;

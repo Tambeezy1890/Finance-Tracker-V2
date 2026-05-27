@@ -15,6 +15,7 @@ export const generateToken = async (user, statusCode, res) => {
     JWT_SECRET,
     { expiresIn: EXPIRES_IN },
   );
+
   const refreshToken = jwt.sign(
     {
       id: user._id,
@@ -24,7 +25,6 @@ export const generateToken = async (user, statusCode, res) => {
   );
 
   user.refreshToken = refreshToken;
-
   await user.save({ validateBeforeSave: false });
 
   const cookieOptions = {
@@ -34,7 +34,7 @@ export const generateToken = async (user, statusCode, res) => {
     sameSite: "strict",
   };
 
-  res
+  return res
     .status(statusCode)
     .cookie("token", accessToken, cookieOptions)
     .json({
@@ -49,11 +49,12 @@ export const generateToken = async (user, statusCode, res) => {
         isEmailVerified: user.isEmailVerified,
       },
     });
-  next();
 };
 
-export const verifyToken = async (token) => {
-  return jwt.verify(token, JWT_REFRESH_TOKEN, {
-    expiresIn: JWT_REFRESH_EXPIRE,
-  });
+export const verifyToken = (token) => {
+  return jwt.verify(token, JWT_SECRET);
+};
+
+export const verifyRefreshToken = (token) => {
+  return jwt.verify(token, JWT_REFRESH_TOKEN);
 };
