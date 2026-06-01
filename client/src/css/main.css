@@ -1,7 +1,4 @@
 @import "tailwindcss";
 body{
-    background-color: black;
-}
-.hello{
-    color: rgb(74, 70, 70);
+    background-color: whiet;
 }

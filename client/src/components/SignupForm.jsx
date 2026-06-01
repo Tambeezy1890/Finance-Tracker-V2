@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { useAuthContext } from "../contexts/AuthContexts";
-import {} from "react-router-dom";
+
+import {
+  AlertCircle,
+  ChevronRight,
+  Lock,
+  Mail,
+  User,
+  Eye,
+  UserPlus,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 function Signup() {
   const [data, setData] = useState({
     email: "",
@@ -23,104 +33,129 @@ function Signup() {
     }));
   };
   return (
-    <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-            alt="Your Company"
-            className="mx-auto h-10 w-auto"
-          />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
-            Create an account
+    <div className="min-h-screen flex justify-center items-center bg-[#f8fafc] py-12 px-4">
+      <div className="max-w-md w-full space-y-8  py-4">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-[1.25rem] bg-indigo-600 text-white shadow-xl shadow-indigo-100 mb-6">
+            <UserPlus size={28} strokeWidth={2.5} />
+          </div>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase">
+            Create an Account
           </h2>
+          <p className="font-medium text-slate-500 mt-3">
+            Initialize your profile to access the vault
+          </p>
         </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSignup} className="space-y-6">
+        <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 sm:p-18 ">
+          {/* conditional rendering */}
+          {/*  <div className="mb-6 flex items-center gap-2 p-4 bg-rose-50 border border-rose-100">
+            <AlertCircle size={18} className="shrink-0" />
+            <p className="text-[10px] font-black uppercase tracking-wide">
+              Error
+            </p>
+          </div> */}
+          <form className="py-2 ">
             <div>
-              <label
-                for="email"
-                className="block text-sm/6 font-medium text-gray-100"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  required
-                  autocomplete="email"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div>
-              <label
-                for="username"
-                className="block text-sm/6 font-medium text-gray-100"
-              >
+              <label className="block text-[11px] font-black text-slate-400 uppercase-widest my-1 ml-1 ">
                 Username
               </label>
-              <div className="mt-2">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
+                  <User size={18} />
+                </div>
                 <input
-                  id="username"
                   type="text"
                   name="username"
                   required
-                  autocomplete="text"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  onChange={handleChange}
+                  className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
+                  placeholder="e.g username120"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[11px] font-black text-slate-400 uppercase-widest mb-1 ml-1">
+                Identity (Email)
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
+                  <Mail size={18} />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
+                  placeholder="name@agency.com"
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  for="password"
-                  className="block text-sm/6 font-medium text-gray-100"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
+              <label className="block text-[11px] font-black text-slate-400 ml-1 my-1 uppercase-widest">
+                Password
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
+                  <Lock size={18} />
+                </div>
                 <input
-                  id="password"
                   type="password"
                   name="password"
                   required
-                  autocomplete="current-password"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  onChange={handleChange}
+                  className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
+                  placeholder=". . . . . . . . ."
+                />
+                <button
+                  type="button"
+                  className=" absolute inset-y-0 right-0 pr-4 flext items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <Eye size={18} />
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[11px] font-black text-slate-400 ml-1 my-1 uppercase-widest">
+                Confirm Password
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
+                  <Lock size={18} />
+                </div>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
+                  placeholder=". . . . . . . . ."
                 />
               </div>
             </div>
 
-            <div>
+            <div className="mt-4 block">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                className="flex items-center justify-center tracking-widest uppercase text-xs  text-white active:scale-[0.90] font-black  w-full p-4 rounded-[1.3rem] bg-slate-900 shadow-lg shodow-slate-200
+                disabled:opacity-70 hover:bg-indigo-500 transition-all duration-200 "
               >
                 Create Account
               </button>
             </div>
           </form>
-
-          <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Already have an account?
-            <a
-              href=""
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
-            >
-              Login
-            </a>
-          </p>
+          <div className="mt-10  border border-slate-50 text-center">
+            <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest flex justify-center">
+              Already have an account? Log in
+              <Link to="/login">
+                <ChevronRight
+                  size={13}
+                  strokeWidth={3}
+                  className="ml-4 hover:bg-indigo-400"
+                />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 export default Signup;

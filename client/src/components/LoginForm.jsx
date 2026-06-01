@@ -1,5 +1,14 @@
 import { useState } from "react";
 import { useAuthContext } from "../contexts/AuthContexts";
+import {
+  AlertCircle,
+  ChevronRight,
+  Eye,
+  Lock,
+  LogIn,
+  Mail,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [data, setData] = useState({
@@ -22,93 +31,115 @@ function Login() {
     }));
   };
   return (
-    <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-            alt="Your Company"
-            className="mx-auto h-10 w-auto"
-          />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
-            login in to your account
+    <div className="min-h-screen flex justify-center items-center bg-[#f8fafc] py-12 px-4">
+      <div className="max-w-md w-full space-y-8  py-4 rounded-xl">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-[1.25rem] bg-indigo-600 text-white shadow-xl shadow-indigo-100 mb-6">
+            <LogIn size={28} strokeWidth={2.5} />
+          </div>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase">
+            Account Login
           </h2>
+          <p>Enter your credentials to access the vault</p>
         </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSubmit}>
+        <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 sm:p-18 ">
+          {/* conditional rendering */}
+          {/*  <div className="mb-6 flex items-center gap-2 p-4 bg-rose-50 border border-rose-100">
+            <AlertCircle size={18} className="shrink-0" />
+            <p className="text-[10px] font-black uppercase tracking-wide">
+              Error
+            </p>
+          </div> */}
+          <form className="py-2 ">
             <div>
-              <label
-                for="email"
-                className="block text-sm/6 font-medium text-gray-100"
-              >
-                Email address
+              <label className="block text-[11px] font-black text-slate-400 uppercase-widest mb-1 ml-1">
+                Identity (Email)
               </label>
-              <div className="mt-2">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
+                  <Mail size={18} />
+                </div>
                 <input
-                  id="email"
                   type="email"
                   name="email"
                   required
-                  autocomplete="email"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  onChange={handleChange}
+                  className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
+                  placeholder="name@agency.com"
                 />
               </div>
             </div>
-
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  for="password"
-                  className="block text-sm/6 font-medium text-gray-100"
-                >
+              <div className="flex justify-between items-center mt-4">
+                <label className="block text-[11px] font-black text-slate-400 ml-1 my-1 uppercase-widest">
                   Password
                 </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-400 hover:text-indigo-300"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
+                <a
+                  href="#"
+                  className="block text-[11px] font-black text-slate-400 my-1 mr-1 uppercase-widest"
+                >
+                  Forgot password
+                </a>
               </div>
-              <div className="mt-2">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
+                  <Lock size={18} />
+                </div>
                 <input
-                  id="password"
                   type="password"
                   name="password"
                   required
-                  autocomplete="current-password"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                  onChange={handleChange}
+                  className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
+                  placeholder=". . . . . . . . ."
                 />
+                <button
+                  type="button"
+                  className=" absolute inset-y-0 right-0 pr-4 flext items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <Eye size={18} />
+                </button>
               </div>
             </div>
 
-            <div>
+            <div className="mt-4 flex items-center ">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                name="rememberMe"
+                className="w-4 h-4 ml-1 border-slate-300 text-indigo-600 focus:ring-indigo-500
+                cursor-pointer rounded-[10px]"
+              />
+              <label
+                htmlFor="rememberMe"
+                className="ml-2 block text-xs texs-slate-500 text-slate-500 font-bold cursor-pointer"
+              >
+                Remember Me
+              </label>
+            </div>
+            <div className="mt-4 block">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 mt-10"
+                className="flex items-center justify-center tracking-widest uppercase text-xs  text-white active:scale-[0.90] font-black  w-full p-4 rounded-[1.3rem] bg-slate-900 shadow-lg shodow-slate-200
+                disabled:opacity-70 hover:bg-indigo-500 transition-all duration-200 "
               >
-                Sign in
+                Login
               </button>
             </div>
           </form>
-
-          <p className="mt-10 text-center text-sm/6 text-gray-400">
-            Not a member?
-            <a
-              href="#"
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
-            >
-              Start a 14 day free trial
-            </a>
-          </p>
+          <div className="mt-10  border border-slate-50 text-center">
+            <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest flex justify-center">
+              New to the system? Register Now
+              <Link to="/signup">
+                <ChevronRight
+                  size={13}
+                  strokeWidth={3}
+                  className="ml-4 hover:bg-indigo-400"
+                />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 export default Login;

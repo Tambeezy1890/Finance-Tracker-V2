@@ -3,17 +3,21 @@ import Login from "./components/LoginForm";
 import "./css/main.css";
 import Signup from "./components/SignupForm";
 import Dashboard from "./pages/Dashboard";
-import Toast from "./components/Toast";
+import Verification from "./components/Verification";
+import EmailSent from "./components/EmailSent";
+import ForgotPass from "./components/ForgotPass";
+import ResetPass from "./components/ResetPass";
 
 function App() {
   return (
     <>
-      <Routes>
+      <ResetPass />
+      {/*  <Routes>
         <Route path="/" element={<Navigate to="/login"></Navigate>}></Route>
         <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/signup" element={<Signup></Signup>}></Route>
         <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
-      </Routes>
+      </Routes> */}
     </>
   );
 }
