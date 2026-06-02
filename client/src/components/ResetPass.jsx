@@ -1,4 +1,12 @@
-import { AlertCircle, Loader2, Lock, LockIcon, ShieldIcon } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  Eye,
+  Loader2,
+  Lock,
+  LockIcon,
+  ShieldIcon,
+} from "lucide-react";
 
 function ResetPass() {
   return (
@@ -38,6 +46,9 @@ function ResetPass() {
                   className="block w-full pl-11 pr-12 py-4 focus:ring-4 border border-slate-200 text-sm rounded-2xl focus:ring-emerald-50 text-slate-900 focus:border-emerald-600 outline-none focus:bg-white font-medium transition-all placeholder:text-slate-300 "
                   placeholder="........."
                 />
+                <button className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-slate-600 cursor-pointer">
+                  <Eye size={18} />
+                </button>
               </div>
             </div>
             <div>
@@ -51,14 +62,20 @@ function ResetPass() {
                 <input
                   type="password"
                   className="block w-full pl-11 pr-12 py-4 focus:ring-4 border border-slate-200 text-sm rounded-2xl focus:ring-emerald-50 text-slate-900 focus:border-emerald-600 outline-none focus:bg-white font-medium transition-all placeholder:text-slate-300 "
-                  placeholder=""
+                  placeholder="........."
                 />
               </div>
             </div>
             <div className="mt-8 ">
-              <button className="bg-slate-900 w-full p-4 rounded-2xl text-white inline-flex items-center justify-center active:bg-slate-800 hover:bg-indigo-700 outline-none">
-                <Loader2 size={18} className="mr-2 " /> Reset
+              <button className="bg-slate-900 w-full p-4 rounded-2xl text-white inline-flex items-center justify-center active:bg-slate-800 hover:bg-emerald-400 outline-none transition-all">
+                <Loader2 size={18} className="mr-2 " /> Update Password
               </button>
+            </div>
+            <div className="mt-4 flex items-center justify-center">
+              <ArrowLeft size={18} strokeWidth={1.4} />
+              <p className="text-slate-400 font-medium tracking-tight hover:text-indigo-500 transition-all">
+                Return to Sign In
+              </p>
             </div>
           </form>
         </div>

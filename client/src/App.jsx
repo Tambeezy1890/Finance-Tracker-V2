@@ -11,7 +11,7 @@ import ResetPass from "./components/ResetPass";
 function App() {
   return (
     <>
-      <ResetPass />
+      <Dashboard />
       {/*  <Routes>
         <Route path="/" element={<Navigate to="/login"></Navigate>}></Route>
         <Route path="/login" element={<Login></Login>}></Route>
