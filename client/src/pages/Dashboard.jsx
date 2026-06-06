@@ -4,11 +4,18 @@ import {
   Camera,
   ExternalLink,
   Fingerprint,
+  Key,
+  Lock,
+  Mail,
+  RefreshCcw,
   ShieldCheck,
+  User,
   UserIcon,
 } from "lucide-react";
 import Navbar from "../components/NavBar";
 import StatTile from "../components/StatTile";
+import ProfileRow from "../components/ProfileRow";
+import SecurityItem from "../components/SecurityItem";
 
 function Dashboard() {
   return (
@@ -100,6 +107,68 @@ function Dashboard() {
                   <Camera size={18} />
                 </button>
               </div>
+              <div className="flex-1 w-full space-y-1">
+                <ProfileRow
+                  label="Legal Name"
+                  value="Name"
+                  icon={<User />}
+                  size={16}
+                />
+                <ProfileRow
+                  label="Email Address"
+                  value="tambowoneyi06@gmail.com"
+                  icon={<Mail />}
+                  size={16}
+                  badge={"bg-rose-50 text-rose-600"}
+                />
+                <ProfileRow
+                  label="Access Level"
+                  value="User"
+                  icon={<Lock />}
+                  size={16}
+                  badge={"bg-indigo-50 text-indigo-600"}
+                />
+                <ProfileRow
+                  label="Registered"
+                  value="Date"
+                  icon={<RefreshCcw />}
+                  size={16}
+                />
+              </div>
+            </div>
+          </div>
+          {/* Security features */}
+          <div
+            className="bg-slate-900 rounded-[2.5rem] p-10 text-white \
+          relative overflow-hidden shadow-2xl shadow-slate-200"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+            <h2 className="text-sm font-black mb-8 flex items-center gap-3 uppercase tracking-widest text-indigo-500">
+              <ShieldCheck />
+              Active Encryption
+            </h2>
+            <ul className="space-y-5">
+              <SecurityItem icon={<Key size={18} />} text="Argon2id Hashing" />
+              <SecurityItem
+                icon={<Fingerprint size={18} />}
+                text="JWT Verification"
+              />
+              <SecurityItem
+                icon={<RefreshCcw size={18} />}
+                text="Rotational Refresher"
+              />
+              <SecurityItem
+                icon={<Lock size={18} />}
+                text="Cross-Site Protection"
+              />
+            </ul>
+            <div className="mt-12 pt-8 border-t border-white/5">
+              <p className="text-[11px] font-black tracking-widest mb-3 text-slate-500 uppercase">
+                System login
+              </p>
+              <p className="text-sm text-indigo-100/70 leading-relaxed font-medium italic">
+                Secure encrypted link established
+              </p>
             </div>
           </div>
         </div>
