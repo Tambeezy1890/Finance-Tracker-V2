@@ -14,7 +14,7 @@ app.use(
     methods: ["POST", "GET", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-  }),
+  })
 );
 
 app.get("/", (req, res) => {
@@ -23,9 +23,9 @@ app.get("/", (req, res) => {
 
 app.use("/auth/v2", authRoute);
 
+app.use(errorMiddleware);
+
 app.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);
   await connectDatabase();
 });
-
-app.use(errorMiddleware);

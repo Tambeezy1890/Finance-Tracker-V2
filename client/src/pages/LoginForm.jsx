@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthContext } from "../contexts/AuthContexts";
 import {
   AlertCircle,
+  ChevronLeft,
   ChevronRight,
   Eye,
   Lock,
@@ -127,12 +128,16 @@ function Login() {
           </form>
           <div className="mt-10  border border-slate-50 text-center">
             <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest flex justify-center">
-              New to the system? Register Now
-              <Link to="/signup">
+              New to the system?
+              <Link
+                to="/signup"
+                className="text-[10px] text-indigo-400 hover:text-indigo-300 flex ml-2 group"
+              >
+                Register Now
                 <ChevronRight
                   size={13}
                   strokeWidth={3}
-                  className="ml-4 hover:bg-indigo-400"
+                  className=" group-hover:translate-x-1 transition-transform"
                 />
               </Link>
             </div>

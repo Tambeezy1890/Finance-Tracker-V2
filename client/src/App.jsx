@@ -1,23 +1,65 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./components/LoginForm";
+import Login from "./pages/LoginForm";
 import "./css/main.css";
-import Signup from "./components/SignupForm";
+
+import { Toaster } from "react-hot-toast";
+import Signup from "./pages/SignupForm";
+import EmailSent from "./pages/EmailSent";
+import Verification from "./pages/Verification";
+import ForgotPass from "./pages/ForgotPass";
+import ResetPass from "./pages/ResetPass";
 import Dashboard from "./pages/Dashboard";
-import Verification from "./components/Verification";
-import EmailSent from "./components/EmailSent";
-import ForgotPass from "./components/ForgotPass";
-import ResetPass from "./components/ResetPass";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
     <>
-      <Dashboard />
-      {/*  <Routes>
-        <Route path="/" element={<Navigate to="/login"></Navigate>}></Route>
-        <Route path="/login" element={<Login></Login>}></Route>
-        <Route path="/signup" element={<Signup></Signup>}></Route>
-        <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
-      </Routes> */}
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          className: "",
+          duration: 4000,
+          style: {
+            background: "#fff",
+            color: "#000",
+          },
+
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: "green",
+              secondary: "white",
+            },
+          },
+
+          error: {
+            duration: 5000,
+            iconTheme: {
+              primary: "red",
+              secondary: "white",
+            },
+          },
+        }}
+      />
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />}></Route>
+        {/* public routes */}
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/verify-email/:token" element={<Verification />}></Route>
+        <Route path="/verification-sent" element={<EmailSent />}></Route>
+        <Route path="/forgot-password" element={<ForgotPass />}></Route>
+        <Route path="/reset-password/:token" element={<ResetPass />}></Route>
+        {/* private routes */}
+        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+
+        <Route path="*" element={<Navigate to="/login" />} replace></Route>
+      </Routes>
     </>
   );
 }

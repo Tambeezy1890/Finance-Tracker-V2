@@ -74,7 +74,7 @@ authRoute.get(
   "/user-dashboard",
   protect,
   authorizeRoles("user"),
-  userDashboard,
+  userDashboard
 );
 
 authRoute.patch("/reset-password/:token", passwordValidation, resetPassword);
