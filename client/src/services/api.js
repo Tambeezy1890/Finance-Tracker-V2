@@ -31,7 +31,15 @@ const authService = {
   },
   verify: async (token) => {
     const response = await api.get(`/verify-email/${token}`, token);
-    console.log(token);
+    return response;
+  },
+  login: async (userData) => {
+    const response = await api.post(`/login`, userData.data);
+    return response;
+  },
+  forgotPass: async (email) => {
+    const response = await api.post(`/forgot-password`, { email: email });
+    console.log(response);
     return response;
   },
 };

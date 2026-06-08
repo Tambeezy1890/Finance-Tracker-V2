@@ -1,9 +1,53 @@
-import { ArrowLeft, KeyRound, Loader2, Mail, MailCheck } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  KeyRound,
+  Loader2,
+  Mail,
+  MailCheck,
+} from "lucide-react";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import authService from "../services/api";
 
 function ForgotPass() {
+  const [data, setData] = useState({
+    email: "",
+  });
+  const resetPasswordSent = useRef();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const { email } = data;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(data);
+    if (data.email.length <= 0) {
+      setError("Email is not valid");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await authService.forgotPass(email);
+      toast.success("Instructions sent");
+      return response;
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to verify email";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleChange = (e) => {
+    setData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-      {/*  <div className="max-w-md w-full py-8 relative">
+      <div className="max-w-md w-full py-8 relative">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl text-white shadow-xl shadow-indigo-100 mb-6">
             <KeyRound size={32} strokeWidth={2.5} />
@@ -15,8 +59,16 @@ function ForgotPass() {
             Enter your email we'll send you recovery steps
           </p>
         </div>
-        <div className="bg-white w-full shadow-lg shadow-slate-300 border border-slate-50 rounded-2xl p-8 mt-4">
+        <div className="bg-white w-full shadow-lg shadow-slate-300 border border-slate-50 rounded-2xl p-8 mt-2">
           <div>
+            {error && (
+              <div className="mb-6 flex items-center gap-2 p-4 bg-rose-50 border border-rose-100">
+                <AlertCircle size={18} className="shrink-0" />
+                <p className="text-[10px] font-black uppercase tracking-wide">
+                  {error}
+                </p>
+              </div>
+            )}
             <label className="block  text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2 pl-2">
               Account Email
             </label>
@@ -30,15 +82,27 @@ function ForgotPass() {
 
               <input
                 type="email"
+                name="email"
                 placeholder="name@agency.com"
                 className=" w-full pl-11 pr-4 py-4 bg-slate-50 border
                         border-slate-200 rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white outline-none  transition-all"
+                onChange={(e) => handleChange(e)}
               />
             </div>
           </div>
           <div className="text-center ">
-            <button className="inline-flex items-center justify-center mt-8 bg-slate-900 w-full p-4 text-white rounded-2xl active:bg-slate-800 hover:bg-indigo-700 transition-all disabled:opacity-8 font-medium tracking-tight shadow-md shadow-slate-300 outline-none">
-              <Loader2 className="animate-spin mr-2" /> Sending instructions
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center mt-8 bg-slate-900 w-full p-4 text-white rounded-2xl active:bg-slate-800 hover:bg-indigo-700 transition-all disabled:opacity-8 font-medium tracking-tight shadow-md shadow-slate-300 outline-none"
+              onClick={handleSubmit}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" /> Sending instructions
+                </>
+              ) : (
+                "Confirm"
+              )}
             </button>
           </div>
           <div className="inline-flex items-center justify-center w-full mt-4 group transition-all duration-700 ">
@@ -52,8 +116,8 @@ function ForgotPass() {
             </p>
           </div>
         </div>
-      </div> */}
-      <div className="max-w-md w-full p-8 relative bg-slate-100 shadow-2xl rounded-2xl ">
+      </div>
+      {/*  <div className="max-w-md w-full p-8 relative bg-slate-100 shadow-2xl rounded-2xl ">
         <div className="text-center">
           <div className="inline-flex text-emerald-400 w-16 h-16 bg-emerald-100/50 items-center justify-center rounded-2xl shadow-inner">
             <MailCheck size={40} strokeWidth={1.5} className=" rounded-2xl" />
@@ -90,7 +154,7 @@ function ForgotPass() {
           />{" "}
           Back to Login
         </a>
-      </div>
+      </div> */}
     </div>
   );
 }

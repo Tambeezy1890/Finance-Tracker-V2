@@ -1,30 +1,60 @@
 import { useState } from "react";
 import { useAuthContext } from "../contexts/AuthContexts";
+import { toast } from "react-hot-toast";
 import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
   Eye,
+  EyeOff,
+  Loader2,
   Lock,
   LogIn,
   Mail,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../services/api";
 
 function Login() {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-
-  const { login } = useAuthContext();
-
-  const handleSubmit = (e) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("working");
+    try {
+      setIsLoading(true);
+      setError("");
 
-    login(data);
+      const response = await authService.login({ data });
+
+      toast.success("Logged in successfully");
+      localStorage.setItem("access-token", response.data.accessToken);
+      if (response.data.user.role === "user") {
+        setTimeout(() => {
+          navigate(`/dashboard/${response.data.user.id}`);
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          navigate(`/admin-dashboard/${response.data.user.id}`);
+        }, 2000);
+      }
+      return response;
+    } catch (err) {
+      const message =
+        err.response?.data?.message || err.message || "Login failed";
+
+      setError(message);
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   const handleChange = (e) => {
     setData((prev) => ({
       ...prev,
@@ -45,13 +75,15 @@ function Login() {
         </div>
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-8 sm:p-18 ">
           {/* conditional rendering */}
-          {/*  <div className="mb-6 flex items-center gap-2 p-4 bg-rose-50 border border-rose-100">
-            <AlertCircle size={18} className="shrink-0" />
-            <p className="text-[10px] font-black uppercase tracking-wide">
-              Error
-            </p>
-          </div> */}
-          <form className="py-2 ">
+          {error && (
+            <div className="mb-6 flex items-center gap-2 p-4 bg-rose-50 border border-rose-100">
+              <AlertCircle size={18} className="shrink-0" />
+              <p className="text-[10px] font-black uppercase tracking-wide">
+                {error}
+              </p>
+            </div>
+          )}
+          <form className="py-2 " onSubmit={handleSubmit}>
             <div>
               <label className="block text-[11px] font-black text-slate-400 uppercase-widest mb-1 ml-1">
                 Identity (Email)
@@ -66,6 +98,7 @@ function Login() {
                   required
                   className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
                   placeholder="name@agency.com"
+                  onChange={(e) => handleChange(e)}
                 />
               </div>
             </div>
@@ -74,29 +107,32 @@ function Login() {
                 <label className="block text-[11px] font-black text-slate-400 ml-1 my-1 uppercase-widest">
                   Password
                 </label>
-                <a
-                  href="#"
-                  className="block text-[11px] font-black text-slate-400 my-1 mr-1 uppercase-widest"
+                <Link
+                  to="/forgot-password"
+                  className="block text-[11px] font-black text-slate-400 my-1 mr-1 uppercase-widest
+                  hover:text-indigo-400 transition-colors"
                 >
                   Forgot password
-                </a>
+                </Link>
               </div>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-600 transition-colors">
                   <Lock size={18} />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   required
                   className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
                   placeholder=". . . . . . . . ."
+                  onChange={(e) => handleChange(e)}
                 />
                 <button
                   type="button"
                   className=" absolute inset-y-0 right-0 pr-4 flext items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  <Eye size={18} />
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
@@ -122,7 +158,14 @@ function Login() {
                 className="flex items-center justify-center tracking-widest uppercase text-xs  text-white active:scale-[0.90] font-black  w-full p-4 rounded-[1.3rem] bg-slate-900 shadow-lg shodow-slate-200
                 disabled:opacity-70 hover:bg-indigo-500 transition-all duration-200 "
               >
-                Login
+                {isLoading ? (
+                  <div className="flex">
+                    <Loader2 size={18} className="animate-spin mr-2" />
+                    Loading.....
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </button>
             </div>
           </form>
