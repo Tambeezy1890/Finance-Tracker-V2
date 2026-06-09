@@ -12,53 +12,50 @@ import {
   LogIn,
   Mail,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import authService from "../services/api";
 
 function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuthContext();
+
   const [data, setData] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  const { email, password, rememberMe } = data;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("working");
+    setIsLoading(true);
+    setError("");
+
     try {
-      setIsLoading(true);
-      setError("");
+      const response = await login({ email, password });
 
-      const response = await authService.login({ data });
-
-      toast.success("Logged in successfully");
-      localStorage.setItem("access-token", response.data.accessToken);
-      if (response.data.user.role === "user") {
-        setTimeout(() => {
-          navigate(`/dashboard/${response.data.user.id}`);
-        }, 2000);
-      } else {
-        setTimeout(() => {
-          navigate(`/admin-dashboard/${response.data.user.id}`);
-        }, 2000);
-      }
+      toast.success(`Welcome back ${response.data.user.name.split(" ")[0]}!`);
+      navigate(from, { replace: true });
       return response;
     } catch (err) {
       const message =
         err.response?.data?.message || err.message || "Login failed";
-
-      setError(message);
-      toast.error(message);
     } finally {
       setIsLoading(false);
     }
   };
   const handleChange = (e) => {
+    const value =
+      e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     }));
   };
   return (
@@ -85,7 +82,7 @@ function Login() {
           )}
           <form className="py-2 " onSubmit={handleSubmit}>
             <div>
-              <label className="block text-[11px] font-black text-slate-400 uppercase-widest mb-1 ml-1">
+              <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">
                 Identity (Email)
               </label>
               <div className="relative group">
@@ -95,6 +92,7 @@ function Login() {
                 <input
                   type="email"
                   name="email"
+                  value={email}
                   required
                   className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
                   placeholder="name@agency.com"
@@ -110,7 +108,7 @@ function Login() {
                 <Link
                   to="/forgot-password"
                   className="block text-[11px] font-black text-slate-400 my-1 mr-1 uppercase-widest
-                  hover:text-indigo-400 transition-colors"
+                    hover:text-indigo-400 transition-colors"
                 >
                   Forgot password
                 </Link>
@@ -122,6 +120,7 @@ function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
+                  value={password}
                   required
                   className="block w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 focus:bg-white transition-all outline-none placeholder:text-slate-300 font-medium"
                   placeholder=". . . . . . . . ."
@@ -129,7 +128,7 @@ function Login() {
                 />
                 <button
                   type="button"
-                  className=" absolute inset-y-0 right-0 pr-4 flext items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className=" absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -140,14 +139,16 @@ function Login() {
             <div className="mt-4 flex items-center ">
               <input
                 type="checkbox"
-                id="rememberMe"
                 name="rememberMe"
+                id="rememberMe"
+                checked={rememberMe}
                 className="w-4 h-4 ml-1 border-slate-300 text-indigo-600 focus:ring-indigo-500
-                cursor-pointer rounded-[10px]"
+                  cursor-pointer rounded-[10px]"
+                onChange={(e) => handleChange(e)}
               />
               <label
                 htmlFor="rememberMe"
-                className="ml-2 block text-xs texs-slate-500 text-slate-500 font-bold cursor-pointer"
+                className="ml-2 block text-xs text-slate-500 font-bold cursor-pointer"
               >
                 Remember Me
               </label>
@@ -155,8 +156,8 @@ function Login() {
             <div className="mt-4 block">
               <button
                 type="submit"
-                className="flex items-center justify-center tracking-widest uppercase text-xs  text-white active:scale-[0.90] font-black  w-full p-4 rounded-[1.3rem] bg-slate-900 shadow-lg shodow-slate-200
-                disabled:opacity-70 hover:bg-indigo-500 transition-all duration-200 "
+                className="flex items-center justify-center tracking-widest uppercase text-xs  text-white active:scale-[0.90] font-black  w-full p-4 rounded-[1.3rem] bg-slate-900 shadow-lg shadow-slate-200
+                  disabled:opacity-70 hover:bg-indigo-500 transition-all duration-200 "
               >
                 {isLoading ? (
                   <div className="flex">

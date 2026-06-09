@@ -9,6 +9,7 @@ export default function StatTile({ icon, label, value, color }) {
     purple: "bg-purple-50 text-purple-700 border-purple-600",
     indigo: "bg-indigo-50 text-indigo-700 border-indigo-600",
     slate: "bg-slate-50 text-slate-700 border-slate-600",
+    amber: "bg-amber-50 text-amber-700 border-amber-600",
   };
 
   return (

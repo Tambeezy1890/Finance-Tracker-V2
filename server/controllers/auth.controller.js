@@ -101,14 +101,18 @@ export const resendEmailVerificationToken = asyncHandler(
 
       throw new ApiError(500, "email could not be sent", err?.message);
     }
-  },
+  }
 );
 
 export const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    throw new ApiError(400, "Invalid Credentials");
+  }
   const validPassword = await user.matchPassword(password);
-  if (!user || !(await user.matchPassword(password))) {
+
+  if (!validPassword) {
     throw new ApiError(400, "Invalid credentials");
   }
   await generateToken(user, 200, res);

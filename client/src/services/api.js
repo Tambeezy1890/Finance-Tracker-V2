@@ -34,12 +34,23 @@ const authService = {
     return response;
   },
   login: async (userData) => {
-    const response = await api.post(`/login`, userData.data);
+    const response = await api.post(`/login`, userData);
+    if (response.data.accessToken) {
+      localStorage.setItem("access-token", response.data.accessToken);
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user || response.data)
+      );
+    }
     return response;
   },
   forgotPass: async (email) => {
     const response = await api.post(`/forgot-password`, { email: email });
     console.log(response);
+    return response;
+  },
+  getUser: async () => {
+    const response = await api.get("/me");
     return response;
   },
 };

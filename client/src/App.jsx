@@ -56,7 +56,7 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPass />}></Route>
         {/* private routes */}
         <Route path="/dashboard" element={<Dashboard />}></Route>
-        <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+        <Route path="/admin-dashboard/:id" element={<AdminDashboard />}></Route>
 
         <Route path="*" element={<Navigate to="/login" />} replace></Route>
       </Routes>

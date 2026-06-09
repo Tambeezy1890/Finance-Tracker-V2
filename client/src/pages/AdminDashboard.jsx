@@ -12,8 +12,13 @@ import {
   UserCheck,
 } from "lucide-react";
 import StatTile from "../components/StatTile";
+import { useAuthContext } from "../contexts/AuthContexts";
 
 function AdminDashboard() {
+  let { user } = useAuthContext();
+  if (user == undefined) {
+    user = JSON.parse(localStorage.getItem("user"));
+  }
   return (
     <div className="bg-[#f8fafc] min-h-screen">
       <Navbar />
@@ -111,26 +116,30 @@ function AdminDashboard() {
                       </div>
                       <div className="">
                         <p className="text-sm text-bold text-slate-900">
-                          User Name
+                          {user.name}
                         </p>
                         <p className="text-sm text-medium text-slate-400">
-                          User Email
+                          {user.email}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-5">
                     <span
-                      className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase`}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase   `}
                     >
-                      User Role
+                      {user.role}
                     </span>
                   </td>
                   <td className="px-9 py-5">
                     <div className="flex items-center gap-2 ">
                       <div className={`w-1.5 rounded-full `}>
                         <span className="text-xs font-bold text-slate-600">
-                          Verified
+                          {user.isEmailVerified ? (
+                            <>Verified</>
+                          ) : (
+                            "Not Verified"
+                          )}
                         </span>
                       </div>
                     </div>

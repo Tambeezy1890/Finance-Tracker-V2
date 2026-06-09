@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import api from "../services/api";
+import authService from "../services/api";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -7,31 +9,33 @@ export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [isLoading, setIsLoding] = useState(false);
   const [verified, setVerified] = useState(false);
 
-  const signup = async (user) => {
+  const login = async (data) => {
     try {
-      const res = await api.post("/auth/v2/signup", user);
-      localStorage.setItem("accessToken", res.data.accessToken);
-      setUser(res.data.user);
+      setIsLoding(true);
+      const response = await authService.login(data);
+      setUser((await response).data.user);
+      return response;
+    } catch (error) {
+      const message = error.response?.data?.message || "Login failed";
+      toast.error(message);
+    } finally {
+      setIsLoding(false);
+    }
+  };
 
-      return res.data.user;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const login = async (user) => {
-    try {
-      const res = await api.post(`/auth/v2/login`, user);
-      setUser(res.data.user);
-      localStorage.setItem("accessToken", res.data.accessToken);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
-    <AuthContext.Provider value={{ user, login, signup }}>
+    <AuthContext.Provider value={{ user, login, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+/* <div className="flex flex-col items-center justify-center min-h-screen bg-[#f8fafc]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <p className="mt-4 text-slate-500 font-bold tracking-tight uppercase text-[10px]">
+            Syncing Session....
+          </p>
+        </div> */

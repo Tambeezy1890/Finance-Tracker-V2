@@ -16,8 +16,51 @@ import Navbar from "../components/NavBar";
 import StatTile from "../components/StatTile";
 import ProfileRow from "../components/ProfileRow";
 import SecurityItem from "../components/SecurityItem";
+import { useAuthContext } from "../contexts/AuthContexts";
+import { useState } from "react";
+import authService from "../services/api";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 function Dashboard() {
+  let { user } = useAuthContext();
+  if (user == undefined) {
+    user = JSON.parse(localStorage.getItem("user"));
+  }
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  useEffect(() => {
+    fetchDashoardData();
+  }, []);
+  const fetchDashoardData = async () => {
+    setLoading(true);
+    try {
+      const response = await authService.getUser();
+      setDashboardData(response.data);
+      return response;
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Faile to get user dashboard";
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleResendVerification = async () => {
+    setSendingEmail(true);
+    try {
+      await authService.resend(user.email);
+      toast.success("Verification link sent to your inbox");
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Failed to resend verification";
+      toast.error();
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <Navbar />
@@ -26,7 +69,7 @@ function Dashboard() {
         <div className="flex flex-col mb-8 md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">
-              Welcome, User name
+              Welcome, {user.name}
             </h1>
             <p className="mt-1 text-slate-500 font-medium">
               Realtime security oversight and profile management
@@ -34,28 +77,35 @@ function Dashboard() {
           </div>
           <div className="text-[10px] font-black text-slate-400 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-400 uppercase tracking-widest">
             Identity Node: {}
-            Admin
+            {user.role}
           </div>
         </div>
         {/* Verification alret */}
         {/* Conditional rendering */}
-        <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex md:flex-row rounded-4xl gap-4 items-center">
-          <div className="flex items-center justify-center bg-amber-100 w-10 h-10 rounded-2xl text-amber-400 shrink-0 shadow-sm">
-            <AlertCircle size={24} />
+        {user.isEmailVerified ? (
+          <></>
+        ) : (
+          <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex md:flex-row rounded-4xl gap-4 items-center">
+            <div className="flex items-center justify-center bg-amber-100 w-10 h-10 rounded-2xl text-amber-400 shrink-0 shadow-sm">
+              <AlertCircle size={24} />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-amber-900 font-black tracking-tight uppercase text-sm">
+                Verification required
+              </h2>
+              <p className="text-amber-700 font-medium text-sm">
+                Confirm your email to unlock high-level system permissions
+              </p>
+            </div>
+            <button
+              className="flex items-center gap-2 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-black rounded-xl shadow-2xl shadow-amber-200 transition-all disabled:opacity-50 uppercase tracking-widest"
+              onClick={() => handleResendVerification()}
+            >
+              {/* Conditional rendering */}
+              Resend Link
+            </button>
           </div>
-          <div className="flex-1 text-center md:text-left">
-            <h2 className="text-amber-900 font-black tracking-tight uppercase text-sm">
-              Verification required
-            </h2>
-            <p className="text-amber-700 font-medium text-sm">
-              Confirm your email to unlock high-level system permissions
-            </p>
-          </div>
-          <button className="flex items-center gap-2 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-black rounded-xl shadow-2xl shadow-amber-200 transition-all disabled:opacity-50 uppercase tracking-widest">
-            {/* Conditional rendering */}
-            Resend Link
-          </button>
-        </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           <StatTile
             icon={<UserIcon size={18} />}
@@ -72,8 +122,8 @@ function Dashboard() {
           <StatTile
             icon={<ShieldCheck size={18} />}
             label="Identity"
-            color="emerald"
-            value="Verified"
+            color={user.isEmailVerified ? "emerald" : "amber"}
+            value={user.isEmailVerified ? "Verified" : "Not Verified"}
           />
           <StatTile
             icon={<Fingerprint size={18} />}
@@ -100,7 +150,7 @@ function Dashboard() {
                   {/*  <img src="" alt="" className="w-full object-cover h-full" /> */}
                   {/* conditional rendering */}
                   <span className="text-3xl font-black text-slate-300 text-center">
-                    User Name
+                    {user.name}
                   </span>
                 </div>
                 <button className="absolute -right-2 -bottom-2 bg-indigo-600 p-2 rounded-xl text-white shadow-lg hover:scale-110 transition-transform">
@@ -110,20 +160,20 @@ function Dashboard() {
               <div className="flex-1 w-full space-y-1">
                 <ProfileRow
                   label="Legal Name"
-                  value="Name"
+                  value={user.name}
                   icon={<User />}
                   size={16}
                 />
                 <ProfileRow
                   label="Email Address"
-                  value="tambowoneyi06@gmail.com"
+                  value={user.email}
                   icon={<Mail />}
                   size={16}
                   badge={"bg-rose-50 text-rose-600"}
                 />
                 <ProfileRow
                   label="Access Level"
-                  value="User"
+                  value={user.role}
                   icon={<Lock />}
                   size={16}
                   badge={"bg-indigo-50 text-indigo-600"}
