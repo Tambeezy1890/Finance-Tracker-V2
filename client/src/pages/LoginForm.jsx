@@ -39,7 +39,6 @@ function Login() {
 
     try {
       const response = await login({ email, password });
-
       toast.success(`Welcome back ${response.data.user.name.split(" ")[0]}!`);
       navigate(from, { replace: true });
       return response;

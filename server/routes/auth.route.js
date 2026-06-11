@@ -1,8 +1,11 @@
 import { Router } from "express";
 import {
+  adminDashboard,
+  deleteUser,
   forgotPassword,
   generateNewAccessToken,
   getUser,
+  getUsers,
   loginUser,
   logoutUser,
   resendEmailVerificationToken,
@@ -76,10 +79,22 @@ authRoute.get(
   authorizeRoles("user"),
   userDashboard
 );
+authRoute.get(
+  "/admin-dashboard",
+  protect,
+  authorizeRoles("admin"),
+  adminDashboard
+);
+authRoute.get("/get-users", protect, authorizeRoles("admin"), getUsers);
 
 authRoute.patch("/reset-password/:token", passwordValidation, resetPassword);
 
 authRoute.patch("/update-user/:id", (req, res) => null);
-authRoute.delete("/delete-user/:id", (req, res) => null);
+authRoute.delete(
+  "/delete-user/:id",
+  protect,
+  authorizeRoles("admin"),
+  deleteUser
+);
 
 export default authRoute;

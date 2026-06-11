@@ -1,15 +1,17 @@
-import { LogOut, UserIcon, Zap } from "lucide-react";
+import { LogOut, Menu, UserIcon, Zap } from "lucide-react";
 import { useAuthContext } from "../contexts/AuthContexts";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-function Navbar() {
-  let { user } = useAuthContext();
-  if (user == undefined) {
-    user = JSON.parse(localStorage.getItem("user"));
-  }
+import authService from "../services/api";
+import { useState } from "react";
+
+function Navbar({ setSidebar, sidebar }) {
+  let { user, logout } = useAuthContext();
+
   const navigate = useNavigate();
 
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
+    await logout();
     toast.success("Logged out");
     setTimeout(() => {
       navigate("/login");
@@ -20,12 +22,19 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center ">
-            <a href="#" className="flex items-center gap-2">
-              <Zap size={24} className="text-indigo-600" />
-              <span className="text-xl font-black text-slate-900 uppercase">
-                Finance Tracker
-              </span>
-            </a>
+            <Menu
+              size={18}
+              className="mr-4 hover:cursor-pointer hover:text-indigo-600 transition-colors "
+              onClick={() => setSidebar((prev) => !prev)}
+            />
+            {!sidebar && (
+              <Link to="/dashboard" className="flex items-center gap-2">
+                <Zap size={24} className="text-indigo-600" />
+                <span className="text-xl font-black text-slate-900 uppercase">
+                  Finance Tracker
+                </span>
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-2">

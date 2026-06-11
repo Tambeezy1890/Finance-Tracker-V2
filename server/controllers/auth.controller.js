@@ -245,3 +245,41 @@ export const adminDashboard = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ success: true, message: "admin dashboard" });
 });
+export const getUsers = asyncHandler(async (req, res, next) => {
+  const users = await User.find();
+  if (!users.length > 0) {
+    return res.status(200).json({ success: true, message: "No users" });
+  }
+  return res.status(200).json({ success: true, users: users });
+});
+export const getAdmins = asyncHandler(async (req, res, next) => {
+  const users = await User.find({ role: "admin" });
+  if (!users.length > 0) {
+    return res.status(200).json({ success: true, message: "No users" });
+  }
+});
+
+export const deleteUser = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new ErrorHandler("User ID is required", 400));
+  }
+
+  if (id === req.user._id.toString()) {
+    return next(new ErrorHandler("You cannot delete your own account", 400));
+  }
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  await User.findByIdAndDelete(id);
+
+  return res.status(200).json({
+    success: true,
+    message: "User deleted successfully",
+  });
+});

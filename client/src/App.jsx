@@ -10,6 +10,9 @@ import ForgotPass from "./pages/ForgotPass";
 import ResetPass from "./pages/ResetPass";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import PublicRoute from "./components/PublicRoute";
+import RoleBasedRoute from "./components/RoleBasedRoute";
 
 function App() {
   return (
@@ -48,15 +51,32 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" />}></Route>
         {/* public routes */}
-        <Route path="/login" element={<Login />}></Route>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/verify-email/:token" element={<Verification />}></Route>
         <Route path="/verification-sent" element={<EmailSent />}></Route>
         <Route path="/forgot-password" element={<ForgotPass />}></Route>
         <Route path="/reset-password/:token" element={<ResetPass />}></Route>
         {/* private routes */}
-        <Route path="/dashboard" element={<Dashboard />}></Route>
-        <Route path="/admin-dashboard/:id" element={<AdminDashboard />}></Route>
+        <Route
+          path="/dashboard"
+          element={<ProtectedRoutes>{<Dashboard />}</ProtectedRoutes>}
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <RoleBasedRoute requiredRole="admin">
+              <AdminDashboard />
+            </RoleBasedRoute>
+          }
+        />
 
         <Route path="*" element={<Navigate to="/login" />} replace></Route>
       </Routes>

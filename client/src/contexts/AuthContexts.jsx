@@ -1,4 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import api from "../services/api";
 import authService from "../services/api";
 import toast from "react-hot-toast";
@@ -8,34 +14,79 @@ const AuthContext = createContext();
 export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState();
-  const [isLoading, setIsLoding] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const token = localStorage.getItem("access-token");
+        const storedUser = authService.getUser();
+
+        if (!token || !storedUser) {
+          setIsLoading(false);
+          return;
+        }
+        const response = await authService.getCurrentUser();
+        const userData = response?.user || response;
+        storedUser ? setUser(storedUser) : setUser(userData);
+      } catch (err) {
+        const message =
+          err.response?.data?.message || "Failed to get user data";
+        toast.error(message);
+        localStorage.removeItem("access-token");
+        localStorage.removeItem("user");
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    initAuth();
+  }, []);
 
   const login = async (data) => {
     try {
-      setIsLoding(true);
+      setIsLoading(true);
       const response = await authService.login(data);
       setUser((await response).data.user);
       return response;
     } catch (error) {
       const message = error.response?.data?.message || "Login failed";
       toast.error(message);
+      throw error;
     } finally {
-      setIsLoding(false);
+      setIsLoading(false);
     }
   };
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } catch (err) {
+      const message = err.response?.data?.message || "Failed to logout";
+      toast.error(message);
+    } finally {
+      setUser(null);
+    }
+  };
+  const updateUser = useCallback((userData) => {
+    const clearData = userData.user || userData;
+    setUser(clearData);
+    if (clearData) {
+      localStorage.setItem("user", JSON.stringify(clearData));
+    }
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, login, isLoading }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    login,
+    isLoading,
+    logout,
+    updateUser,
+    isAuthenticated: !!user,
+    isAdmin: user?.role === "admin",
+  };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-/* <div className="flex flex-col items-center justify-center min-h-screen bg-[#f8fafc]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-          <p className="mt-4 text-slate-500 font-bold tracking-tight uppercase text-[10px]">
-            Syncing Session....
-          </p>
-        </div> */
+/*  */
