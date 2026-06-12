@@ -7,6 +7,9 @@ import { useState } from "react";
 
 function Navbar({ setSidebar, sidebar }) {
   let { user, logout } = useAuthContext();
+  if (!user) {
+    user = authService.getUser();
+  }
 
   const navigate = useNavigate();
 

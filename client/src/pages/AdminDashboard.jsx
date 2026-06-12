@@ -105,7 +105,7 @@ function AdminDashboard() {
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">
-      <Navbar setSidebar={setSidebar} />
+      <Navbar setSidebar={setSidebar} sidebar={sidebar} />
       {sidebar && <SideBar />}
       <main
         className={`max-w-7xl mx-auto px-4 sm:px-8 lg:px-8 py-10 

@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoute from "./components/PublicRoute";
 import RoleBasedRoute from "./components/RoleBasedRoute";
+import FinanceDashboard from "./pages/FinanceDashboard";
 
 function App() {
   return (
@@ -77,7 +78,7 @@ function App() {
             </RoleBasedRoute>
           }
         />
-
+        <Route path="/finance" element={<FinanceDashboard />} />
         <Route path="*" element={<Navigate to="/login" />} replace></Route>
       </Routes>
     </>
