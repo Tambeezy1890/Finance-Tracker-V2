@@ -4,6 +4,7 @@ import connectDatabase from "./config/mongodb.js";
 import authRoute from "./routes/auth.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import cors from "cors";
+import transactionRouter from "./routes/transactions.route.js";
 const app = express();
 
 app.use(express.json());
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth/v2", authRoute);
+app.use("/finances/v2", transactionRouter);
 
 app.use(errorMiddleware);
 
