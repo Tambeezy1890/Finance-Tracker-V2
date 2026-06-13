@@ -18,23 +18,36 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const status = error.response?.status;
+  async (error) => {
     const originalRequest = error.config;
-
-    //Check if the error happened during login or registation
+    const status = error.response?.status;
 
     const isAuthRoute =
       originalRequest.url.includes("/auth/v2/login") ||
-      originalRequest.url.includes("/auth/v2/signup");
+      originalRequest.url.includes("/auth/v2/signup") ||
+      originalRequest.url.includes("/auth/v2/refresh-token");
 
-    if (status == 401 && !isAuthRoute) {
-      localStorage.clear();
+    if (
+      (status === 401 && !isAuthRoute && !originalRequest._retry) ||
+      error.response?.data?.message.includes("expired")
+    ) {
+      originalRequest._retry = true;
 
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      try {
+        await api.post("/auth/v2/refresh-token");
+
+        return api(originalRequest);
+      } catch (refreshError) {
+        localStorage.clear();
+
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );
@@ -100,6 +113,18 @@ const authService = {
   getTransactions: async () => {
     const response = await api.get("/finances/v2/transaction");
     return response.data;
+  },
+  deleteTransaction: async (id) => {
+    const response = await api.delete(`/finances/v2/transaction/${id}`);
+    return response;
+  },
+  addTransaction: async (transaction) => {
+    const response = await api.post("/finances/v2/transaction", transaction);
+    return response;
+  },
+  updateTransaction: async (id, data) => {
+    const response = await api.patch(`/finances/v2/transaction/${id}`, data);
+    return response;
   },
 };
 

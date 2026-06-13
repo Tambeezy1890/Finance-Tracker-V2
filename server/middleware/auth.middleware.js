@@ -7,7 +7,7 @@ export const protect = async (req, res, next) => {
   let token;
 
   if (req.cookies && req.cookies.token) {
-    token = req.cookies.token;
+    token = req.cookies.refreshToken;
   } else if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")

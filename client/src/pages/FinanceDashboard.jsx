@@ -5,18 +5,34 @@ import StatTile from "../components/StatTile";
 import authService from "../services/api";
 import { toast } from "react-hot-toast";
 import { Trash2, Edit, Plus, Loader2, AlertTriangle } from "lucide-react";
+import Transactions from "../components/Transactions";
 
 function FinanceDashboard() {
   const [sidebar, setSidebar] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deletingModal, setDeletingModal] = useState({
+    show: false,
+    transaction: null,
+  });
+  const [editingId, setEditingId] = useState(null);
+  const [descriptionValue, setDescriptionValue] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
+  const [addTransaction, setAddTransaction] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [editTransaction, setEditTransaction] = useState({
+    show: false,
+    transaction: null,
+  });
+
   const fetchTransactions = async () => {
     try {
       setIsLoading(true);
 
       const res = await authService.getTransactions();
-      console.log(res);
+
       setTransactions(res.transactions || []);
     } catch (error) {
       toast.error(
@@ -46,12 +62,43 @@ function FinanceDashboard() {
       budget: expenses,
     };
   }, [transactions]);
+  const handleDescriptionUpdate = async (id) => {
+    const cleanNewValue = descriptionValue.trim();
+    const cleanOldValue = originalDescription.trim();
 
-  const handleDelete = async (id) => {
-    if (!confirmDelete) return;
+    if (cleanNewValue === cleanOldValue) {
+      setEditingId(null);
+      setDescriptionValue("");
+      setOriginalDescription("");
+      return;
+    }
 
     try {
-      await authService.delete(`/transactions/${id}`);
+      await authService.updateTransaction(id, {
+        description: cleanNewValue,
+      });
+
+      setTransactions((prev) =>
+        prev.map((item) =>
+          item._id === id ? { ...item, description: cleanNewValue } : item
+        )
+      );
+
+      toast.success("Description updated");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to update description"
+      );
+    } finally {
+      setEditingId(null);
+      setDescriptionValue("");
+      setOriginalDescription("");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await authService.deleteTransaction(id);
 
       setTransactions((prev) => prev.filter((item) => item._id !== id));
 
@@ -60,6 +107,8 @@ function FinanceDashboard() {
       toast.error(
         error?.response?.data?.message || "Failed to delete transaction"
       );
+    } finally {
+      setDeletingModal({ show: false, transaction: null });
     }
   };
 
@@ -69,7 +118,17 @@ function FinanceDashboard() {
       currency: "ZAR",
     }).format(value);
   };
+  const toggleTypeFilter = () => {
+    setTypeFilter((prev) =>
+      prev === "all" ? "expense" : prev === "expense" ? "income" : "all"
+    );
+  };
+  const filteredTransactions = useMemo(() => {
+    if (typeFilter === "all") return transactions;
 
+    return transactions.filter((item) => item.type === typeFilter);
+  }, [transactions, typeFilter]);
+  const updateT = (id) => {};
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <Navbar setSidebar={setSidebar} sidebar={sidebar} />
@@ -106,7 +165,10 @@ function FinanceDashboard() {
               </p>
             </div>
 
-            <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700"
+              onClick={() => setAddTransaction(true)}
+            >
               <Plus size={16} />
               Add Transaction
             </button>
@@ -128,7 +190,12 @@ function FinanceDashboard() {
                     <th className="px-6 py-4">Title</th>
                     <th className="px-6 py-4">Description</th>
                     <th className="px-6 py-4">Category</th>
-                    <th className="px-6 py-4">Type</th>
+                    <th
+                      className="px-6 py-4"
+                      onClick={() => toggleTypeFilter()}
+                    >
+                      Type
+                    </th>
                     <th className="px-6 py-4">Amount</th>
                     <th className="px-6 py-4">Date</th>
                     <th className="px-6 py-4 text-right">Actions</th>
@@ -136,14 +203,33 @@ function FinanceDashboard() {
                 </thead>
 
                 <tbody className="divide-y divide-slate-100">
-                  {transactions.map((item) => (
+                  {filteredTransactions.map((item) => (
                     <tr key={item._id} className="hover:bg-slate-50">
                       <td className="px-6 py-4 font-semibold text-slate-700">
                         {item.title}
                       </td>
 
-                      <td className="px-6 py-4 text-slate-500">
-                        {item.description || "-"}
+                      <td
+                        className="px-6 py-4 text-slate-500"
+                        onClick={() => {
+                          setEditingId(item._id);
+                          setDescriptionValue(item.description || "");
+                          setOriginalDescription(item.description || "");
+                        }}
+                      >
+                        {editingId === item._id ? (
+                          <input
+                            value={descriptionValue}
+                            onChange={(e) =>
+                              setDescriptionValue(e.target.value)
+                            }
+                            onBlur={() => handleDescriptionUpdate(item._id)}
+                            autoFocus
+                            className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          />
+                        ) : (
+                          item.description || "--"
+                        )}
                       </td>
 
                       <td className="px-6 py-4">
@@ -152,7 +238,7 @@ function FinanceDashboard() {
                         </span>
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 ">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
                             item.type === "income"
@@ -165,7 +251,7 @@ function FinanceDashboard() {
                       </td>
 
                       <td
-                        className={`px-6 py-4 font-bold ${
+                        className={`px-6 py-4 font-bold  ${
                           item.type === "income"
                             ? "text-green-600"
                             : "text-red-600"
@@ -183,13 +269,27 @@ function FinanceDashboard() {
 
                       <td className="px-6 py-4">
                         <div className="flex justify-end gap-3">
-                          <button className="p-2 rounded-lg hover:bg-blue-50 text-blue-600">
+                          <button
+                            className="p-2 rounded-lg hover:bg-blue-50 text-blue-600"
+                            onClick={() => {
+                              setEditTransaction({
+                                show: true,
+                                transaction: item,
+                              });
+                              setAddTransaction(true);
+                            }}
+                          >
                             <Edit size={17} />
                           </button>
 
                           <button
                             className="p-2 rounded-lg hover:bg-red-50 text-red-600"
-                            onClick={() => setDeleting(true)}
+                            onClick={() =>
+                              setDeletingModal({
+                                show: true,
+                                transaction: item,
+                              })
+                            }
                           >
                             <Trash2 size={17} />
                           </button>
@@ -203,7 +303,7 @@ function FinanceDashboard() {
           )}
         </section>
       </main>
-      {deleting && (
+      {deletingModal.show && (
         <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs ">
           <div className="bg-white w-full max-w-sm rounded-[2.5rem] p-10 shadow-2xl border border-white/20 ">
             <div className="h-16 w-16 bg-rose-50 text-rose-600 flex items-center justify-center rounded-2xl mx-auto mb-6">
@@ -220,19 +320,29 @@ function FinanceDashboard() {
             <div className="flex flex-col gap-3">
               <button
                 className="w-full py-4 bg-slate-900 text-white font-black rounded-2xl hover:bg-rose-600 transition-colors flex justify-center"
-                onClick={() => handleDelete(item._id)}
+                onClick={() => handleDelete(deletingModal.transaction._id)}
               >
                 <Loader2 /> Confirm
               </button>
               <button
                 className="w-full py-4 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-600 transition-colors"
-                onClick={() => setDeleting(false)}
+                onClick={() =>
+                  setDeletingModal({ show: false, transaction: null })
+                }
               >
                 Cancel
               </button>
             </div>
           </div>
         </div>
+      )}
+      {(addTransaction || editTransaction.show) && (
+        <Transactions
+          addTransaction={setAddTransaction}
+          updateTransaction={setEditTransaction}
+          transactionData={editTransaction}
+          setIsLoading={setIsLoading}
+        />
       )}
     </div>
   );

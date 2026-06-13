@@ -127,7 +127,7 @@ export const logoutUser = asyncHandler(async (req, res, next) => {
 });
 
 export const generateNewAccessToken = asyncHandler(async (req, res, next) => {
-  const { token } = req.body;
+  const { token } = req.cookies.refreshToken;
   if (!token) {
     throw new ApiError(400, "Missing refersh token");
   }

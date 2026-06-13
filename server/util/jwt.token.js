@@ -13,7 +13,7 @@ export const generateToken = async (user, statusCode, res) => {
       role: user.role,
     },
     JWT_SECRET,
-    { expiresIn: EXPIRES_IN },
+    { expiresIn: EXPIRES_IN }
   );
 
   const refreshToken = jwt.sign(
@@ -21,7 +21,7 @@ export const generateToken = async (user, statusCode, res) => {
       id: user._id,
     },
     JWT_REFRESH_TOKEN,
-    { expiresIn: JWT_REFRESH_EXPIRE },
+    { expiresIn: JWT_REFRESH_EXPIRE }
   );
 
   user.refreshToken = refreshToken;
@@ -36,11 +36,10 @@ export const generateToken = async (user, statusCode, res) => {
 
   return res
     .status(statusCode)
-    .cookie("token", accessToken, cookieOptions)
+    .cookie("refreshToken", accessToken, cookieOptions)
     .json({
       success: true,
       accessToken,
-      refreshToken,
       user: {
         id: user._id,
         name: user.username,

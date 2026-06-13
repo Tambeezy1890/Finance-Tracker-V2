@@ -14,6 +14,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoute from "./components/PublicRoute";
 import RoleBasedRoute from "./components/RoleBasedRoute";
 import FinanceDashboard from "./pages/FinanceDashboard";
+import TransactionsAnalytics from "./pages/TransactionAnalytics";
 
 function App() {
   return (
@@ -49,38 +50,41 @@ function App() {
           },
         }}
       />
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />}></Route>
-        {/* public routes */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route path="/signup" element={<Signup />}></Route>
-        <Route path="/verify-email/:token" element={<Verification />}></Route>
-        <Route path="/verification-sent" element={<EmailSent />}></Route>
-        <Route path="/forgot-password" element={<ForgotPass />}></Route>
-        <Route path="/reset-password/:token" element={<ResetPass />}></Route>
-        {/* private routes */}
-        <Route
-          path="/dashboard"
-          element={<ProtectedRoutes>{<Dashboard />}</ProtectedRoutes>}
-        />
-        <Route
-          path="/admin-dashboard"
-          element={
-            <RoleBasedRoute requiredRole="admin">
-              <AdminDashboard />
-            </RoleBasedRoute>
-          }
-        />
-        <Route path="/finance" element={<FinanceDashboard />} />
-        <Route path="*" element={<Navigate to="/login" />} replace></Route>
-      </Routes>
+      {
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />}></Route>
+          {/* public routes */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route path="/signup" element={<Signup />}></Route>
+          <Route path="/verify-email/:token" element={<Verification />}></Route>
+          <Route path="/verification-sent" element={<EmailSent />}></Route>
+          <Route path="/forgot-password" element={<ForgotPass />}></Route>
+          <Route path="/reset-password/:token" element={<ResetPass />}></Route>
+          {/* private routes */}
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoutes>{<Dashboard />}</ProtectedRoutes>}
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <RoleBasedRoute requiredRole="admin">
+                <AdminDashboard />
+              </RoleBasedRoute>
+            }
+          />
+          <Route path="/finance" element={<FinanceDashboard />} />
+          <Route path="/transactions" element={<TransactionsAnalytics />} />
+          <Route path="*" element={<Navigate to="/login" />} replace></Route>
+        </Routes>
+      }
     </>
   );
 }

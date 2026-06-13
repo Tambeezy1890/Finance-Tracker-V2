@@ -5,9 +5,11 @@ import authRoute from "./routes/auth.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import cors from "cors";
 import transactionRouter from "./routes/transactions.route.js";
+import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   cors({
