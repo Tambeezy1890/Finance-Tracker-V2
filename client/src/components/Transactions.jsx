@@ -171,10 +171,15 @@ function Transactions({
                 onChange={(e) => handleUpdate(e)}
               >
                 <option value="">-- Select an Option --</option>
-                <option value="food">food</option>
-                <option value="travel">travel</option>
-                <option value="salary">salary</option>
-                <option value="health">health</option>
+                <option value="food">Food</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="travel">Travel</option>
+                <option value="health">Health</option>
+
+                <option value="utilities">Utilitiesa</option>
+                <option value="lifestyle">Lifestyle</option>
+                <option value="household">Household</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
@@ -280,10 +285,15 @@ function Transactions({
                 onChange={(e) => handleChange(e)}
               >
                 <option value="">-- Select an Option --</option>
-                <option value="food">food</option>
-                <option value="travel">travel</option>
-                <option value="salary">salary</option>
-                <option value="health">health</option>
+                <option value="food">Food</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="travel">Travel</option>
+                <option value="health">Health</option>
+
+                <option value="utilities">Utilitiesa</option>
+                <option value="lifestyle">Lifestyle</option>
+                <option value="household">Household</option>
+                <option value="other">Other</option>
               </select>
             </div>
 

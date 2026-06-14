@@ -3,6 +3,7 @@ import Navbar from "../components/NavBar";
 import {
   Activity,
   ActivityIcon,
+  AlertCircle,
   AlertTriangle,
   Loader2,
   Search,
@@ -28,6 +29,7 @@ function AdminDashboard() {
   const [deleting, setDeleting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [sidebar, setSidebar] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const fetchAdminData = useCallback(async () => {
     try {
@@ -52,6 +54,20 @@ function AdminDashboard() {
       setLoading(false);
     }
   }, []);
+
+  const handleResendVerification = async () => {
+    setSendingEmail(true);
+    try {
+      await authService.resend(currentUser.email);
+      toast.success("Verification link sent to your inbox");
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Failed to resend verification";
+      toast.error(message);
+    } finally {
+      setSendingEmail(false);
+    }
+  };
   useEffect(() => {
     fetchAdminData();
   }, [fetchAdminData]);
@@ -106,7 +122,8 @@ function AdminDashboard() {
   return (
     <div className="bg-[#f8fafc] min-h-screen">
       <Navbar setSidebar={setSidebar} sidebar={sidebar} />
-      {sidebar && <SideBar />}
+      {<SideBar sidebar={sidebar} />}
+
       <main
         className={`max-w-7xl mx-auto px-4 sm:px-8 lg:px-8 py-10 
     sidebar ? "lg:ml-64" : ""`}
@@ -134,7 +151,40 @@ function AdminDashboard() {
             />
           </div>
         </div>
-
+        {currentUser.isEmailVerified ? (
+          <></>
+        ) : (
+          <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex md:flex-row rounded-4xl gap-4 items-center">
+            <div className="flex items-center justify-center bg-amber-100 w-10 h-10 rounded-2xl text-amber-400 shrink-0 shadow-sm">
+              <AlertCircle size={24} />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-amber-900 font-black tracking-tight uppercase text-sm">
+                Verification required
+              </h2>
+              <p className="text-amber-700 font-medium text-sm">
+                Confirm your email to unlock high-level system permissions
+              </p>
+            </div>
+            <button
+              className={`flex items-center gap-2 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-black rounded-xl shadow-2xl shadow-amber-200 transition-all disabled:opacity-50 uppercase tracking-widest  disabled:pointer-events-none disabled:cursor-not-allowed `}
+              onClick={() => {
+                (handleResendVerification(), setSendingEmail(true));
+              }}
+              disabled={sendingEmail}
+            >
+              {/* Conditional rendering */}
+              {sendingEmail ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                "Resend Link"
+              )}
+            </button>
+          </div>
+        )}
         <div className="grid grid-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatTile
             icon={<User size={18} />}
@@ -257,7 +307,11 @@ function AdminDashboard() {
 
                     <td className="px-9 py-5">
                       <span className="text-xs font-bold text-slate-600">
-                        {user.isEmailVerified ? "Verified" : "Not Verified"}
+                        {currentUser.isEmailVerified ? (
+                          <>Verified</>
+                        ) : (
+                          "Pending"
+                        )}
                       </span>
                     </td>
 

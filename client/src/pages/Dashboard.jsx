@@ -5,6 +5,7 @@ import {
   ExternalLink,
   Fingerprint,
   Key,
+  Loader2,
   Lock,
   Mail,
   RefreshCcw,
@@ -24,7 +25,7 @@ import { useEffect } from "react";
 import SideBar from "../components/SideBar";
 
 function Dashboard() {
-  const { user } = useAuthContext();
+  const { user, currentUser } = useAuthContext();
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -104,11 +105,20 @@ function Dashboard() {
                   </p>
                 </div>
                 <button
-                  className="flex items-center gap-2 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-black rounded-xl shadow-2xl shadow-amber-200 transition-all disabled:opacity-50 uppercase tracking-widest"
-                  onClick={() => handleResendVerification()}
+                  className={`flex items-center gap-2 py-3 px-6 bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-black rounded-xl shadow-2xl shadow-amber-200 transition-all disabled:opacity-50 uppercase tracking-widest ${loading ? "disabled:opacity-5 bg-black/50" : ""}`}
+                  onClick={() => {
+                    (handleResendVerification(), setLoading(true));
+                  }}
                 >
                   {/* Conditional rendering */}
-                  Resend Link
+                  {loading ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Resend Link"
+                  )}
                 </button>
               </div>
             )}
@@ -129,7 +139,7 @@ function Dashboard() {
                 icon={<ShieldCheck size={18} />}
                 label="Identity"
                 color={user.isEmailVerified ? "emerald" : "amber"}
-                value={user.isEmailVerified ? "Verified" : "Not Verified"}
+                value={user.isEmailVerified ? "Verified" : "Pending"}
               />
               <StatTile
                 icon={<Fingerprint size={18} />}
@@ -186,7 +196,7 @@ function Dashboard() {
                     />
                     <ProfileRow
                       label="Registered"
-                      value="Date"
+                      value={`${currentUser.createdAt.slice(0, 10)}`}
                       icon={<RefreshCcw />}
                       size={16}
                     />

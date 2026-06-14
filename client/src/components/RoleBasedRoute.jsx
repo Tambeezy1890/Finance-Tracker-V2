@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuthContext } from "../contexts/AuthContexts";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { TriangleAlert } from "lucide-react";
 
 function RoleBasedRoute({ children, requiredRole }) {
   const { user, isAuthenticated, isLoading } = useAuthContext();
@@ -22,8 +23,42 @@ function RoleBasedRoute({ children, requiredRole }) {
   if (user.role !== requiredRole) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f8fafc]">
-        <div className=""></div>
-        <p className="">Access Denied</p>
+        <div className="max-w-md w-full rounded-4xl shadow-xl p-8 bg-white">
+          <div className="text-center space-y-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-rose-50 rounded-3xl text-rose-800 shadow-inner group">
+              <TriangleAlert
+                size={20}
+                className="group-hover:scale-120 transition-transform"
+              />
+            </div>
+            <div>
+              <h1 className="font-black text-slate-900 text-lg tracking-tight">
+                Access Denied
+              </h1>
+              <h3 className="font-medium text-slate-400  tracking-tight">
+                You do not have the required permissions{" "}
+              </h3>
+              <div className="p-4  bg-slate-100 rounded-lg mt-4 shadow-md">
+                <p className="text-[12px] font-medium tracking-tight">
+                  You do not have permission to access the current resource
+                  <br />
+                  <div>
+                    <span className="text-sm">Administrative level: </span>
+                    <span className="text-sm font-bold ml-[0.1px]">
+                      {user.role}
+                    </span>
+                  </div>
+                </p>
+              </div>
+            </div>
+            <Link
+              className="p-4 bg-slate-900 text-white w-full rounded-2xl hover:bg-indigo-600 disabled:opacity-5 flex items-center justify-center transition-colors"
+              to="/login"
+            >
+              Return to login
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

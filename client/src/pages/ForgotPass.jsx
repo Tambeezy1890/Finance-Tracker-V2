@@ -145,7 +145,8 @@ function ForgotPass() {
               <div className="text-center ">
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center mt-8 bg-slate-900 w-full p-4 text-white rounded-2xl active:bg-slate-800 hover:bg-indigo-700 transition-all disabled:opacity-8 font-medium tracking-tight shadow-md shadow-slate-300 outline-none"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center mt-8 bg-slate-900 w-full p-4 text-white rounded-2xl active:bg-slate-800 hover:bg-indigo-700 transition-all disabled:opacity-70 font-medium tracking-tight shadow-md shadow-slate-300 outline-none disabled:cursor-not-allowed disabled:pointer-events-none"
                   onClick={handleSubmit}
                 >
                   {loading ? (

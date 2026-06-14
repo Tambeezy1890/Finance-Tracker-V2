@@ -133,7 +133,7 @@ function FinanceDashboard() {
     <div className="min-h-screen bg-[#f8fafc]">
       <Navbar setSidebar={setSidebar} sidebar={sidebar} />
 
-      {sidebar && <SideBar />}
+      {<SideBar sidebar={sidebar} />}
 
       <main className="w-full mt-4 px-8 md:px-16 lg:px-28">
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">

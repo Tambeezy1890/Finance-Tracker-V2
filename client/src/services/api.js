@@ -126,6 +126,10 @@ const authService = {
     const response = await api.patch(`/finances/v2/transaction/${id}`, data);
     return response;
   },
+  updatePassword: async (token) => {
+    const response = await api.patch(`/reset-password/${token}`);
+    return response;
+  },
 };
 
 export default authService;

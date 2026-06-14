@@ -27,7 +27,7 @@ function Navbar({ setSidebar, sidebar }) {
           <div className="flex items-center ">
             <Menu
               size={18}
-              className="mr-4 hover:cursor-pointer hover:text-indigo-600 transition-colors "
+              className="hidden lg:block mr-4 hover:cursor-pointer hover:text-indigo-600 transition-colors"
               onClick={() => setSidebar((prev) => !prev)}
             />
             {!sidebar && (

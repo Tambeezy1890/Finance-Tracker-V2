@@ -15,6 +15,7 @@ export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         const response = await authService.getCurrentUser();
         const userData = response?.user || response;
         storedUser ? setUser(storedUser) : setUser(userData);
+        setCurrentUser(response.data);
       } catch (err) {
         const message =
           err.response?.data?.message || "Failed to get user data";
@@ -85,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     updateUser,
     isAuthenticated: !!user,
     isAdmin: user?.role === "admin",
+    currentUser,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

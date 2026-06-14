@@ -7,8 +7,47 @@ import {
   LockIcon,
   ShieldIcon,
 } from "lucide-react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import authService from "../services/api";
+import toast from "react-hot-toast";
 
 function ResetPass() {
+  const { token } = useParams();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+  const [viewPassword, setViewPassword] = useState(false);
+
+  const handleChange = (e) => {
+    setPassword((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const changePassword = async (e) => {
+    e.preventDefault();
+    setError("");
+    if (password.password !== password.confirmPassword) {
+      setError("Security passwords do not match ");
+      return;
+    }
+    try {
+      const response = await authService.updatePassword(token);
+      toast.success(response.data?.message || "Password updated");
+      return response;
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Failed to update password";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
       <div className="max-w-md w-full p-8 space-y-8">
@@ -25,14 +64,16 @@ function ResetPass() {
         </div>
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-9 sm:p-10 ">
           {/* conditional rendering */}
-          {/* <div className="mb-6 flex items-center gap-3 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl">
-            <AlertCircle size={18} className="shrink-0" />
-            <p className="text-[10px] font-black uppercase tracking-widest leading-tight">
-              Error
-            </p>
-          </div> */}
+          {error && (
+            <div className="mb-6 flex items-center gap-3 p-4 bg-rose-50 border border-rose-100 text-rose-700 rounded-2xl">
+              <AlertCircle size={18} className="shrink-0" />
+              <p className="text-[10px] font-black uppercase tracking-widest leading-tight">
+                {error}
+              </p>
+            </div>
+          )}
 
-          <form action="#" className="space-y-5">
+          <form onSubmit={changePassword} className="space-y-5">
             <div>
               <label className="block text-slate-400 text-[11px] tracking-tight mb-2 ml-4 font-black uppercase">
                 New Password
@@ -42,11 +83,15 @@ function ResetPass() {
                   <Lock size={18} />
                 </div>
                 <input
-                  type="password"
+                  type={viewPassword ? "text" : "password"}
+                  name="password"
                   className="block w-full pl-11 pr-12 py-4 focus:ring-4 border border-slate-200 text-sm rounded-2xl focus:ring-emerald-50 text-slate-900 focus:border-emerald-600 outline-none focus:bg-white font-medium transition-all placeholder:text-slate-300 "
                   placeholder="........."
                 />
-                <button className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-slate-600 cursor-pointer">
+                <button
+                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  onClick={() => setViewPassword(!viewPassword)}
+                >
                   <Eye size={18} />
                 </button>
               </div>
@@ -60,15 +105,28 @@ function ResetPass() {
                   <Lock size={18} />
                 </div>
                 <input
-                  type="password"
+                  type={viewPassword ? "text" : "password"}
+                  name="confirmPassword"
                   className="block w-full pl-11 pr-12 py-4 focus:ring-4 border border-slate-200 text-sm rounded-2xl focus:ring-emerald-50 text-slate-900 focus:border-emerald-600 outline-none focus:bg-white font-medium transition-all placeholder:text-slate-300 "
                   placeholder="........."
                 />
               </div>
             </div>
             <div className="mt-8 ">
-              <button className="bg-slate-900 w-full p-4 rounded-2xl text-white inline-flex items-center justify-center active:bg-slate-800 hover:bg-emerald-400 outline-none transition-all">
-                <Loader2 size={18} className="mr-2 " /> Update Password
+              <button
+                className="bg-slate-900 w-full p-4 rounded-2xl text-white inline-flex items-center justify-center active:bg-slate-800 hover:bg-emerald-400 outline-none transition-all"
+                type="submit"
+                onClick={() => {
+                  setLoading(true);
+                }}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="mr-2 animate-spin" /> Updating
+                  </>
+                ) : (
+                  <>Update Password</>
+                )}
               </button>
             </div>
             <div className="mt-4 flex items-center justify-center">

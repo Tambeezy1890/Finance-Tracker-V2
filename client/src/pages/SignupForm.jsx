@@ -190,7 +190,7 @@ function Signup() {
                 type="submit"
                 disabled={isLoading}
                 className="flex items-center justify-center tracking-widest uppercase text-xs  text-white active:scale-[0.90] font-black  w-full p-4 rounded-[1.3rem] bg-slate-900 shadow-lg shodow-slate-200  
-                disabled:opacity-70 hover:bg-indigo-500 transition-all duration-200 "
+                disabled:opacity-50 disabled:bg-black/50 hover:bg-indigo-500 transition-all duration-200 "
               >
                 {isLoading ? (
                   <>
