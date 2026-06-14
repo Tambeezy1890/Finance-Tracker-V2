@@ -88,7 +88,14 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        <Route path="/transactions" element={<TransactionsAnalytics />} />
+        <Route
+          path="/transactions"
+          element={
+            <RoleBasedRoute requiredRole="admin">
+              <TransactionsAnalytics />
+            </RoleBasedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/login" />} replace></Route>
       </Routes>
     </>
