@@ -19,7 +19,7 @@ function ProtectedRoutes({ children }) {
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
-  if (isAdmin) {
+  if (isAdmin && !location.pathname.includes("finance")) {
     return (
       <Navigate
         to="/admin-dashboard"

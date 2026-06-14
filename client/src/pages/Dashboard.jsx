@@ -21,6 +21,7 @@ import { useState } from "react";
 import authService from "../services/api";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import SideBar from "../components/SideBar";
 
 function Dashboard() {
   const { user } = useAuthContext();
@@ -28,6 +29,7 @@ function Dashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [sidebar, setSidebar] = useState(false);
 
   useEffect(() => {
     fetchDashoardData();
@@ -66,7 +68,8 @@ function Dashboard() {
     <>
       {user && (
         <div className="min-h-screen bg-[#f8fafc]">
-          <Navbar />
+          <Navbar setSidebar={setSidebar} sidebar={sidebar} />
+          {sidebar && <SideBar />}
           <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 py-10">
             {/* Welcome */}
             <div className="flex flex-col mb-8 md:flex-row md:items-center md:justify-between gap-4">
