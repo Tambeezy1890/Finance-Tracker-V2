@@ -10,10 +10,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+const AllowedOrigin = ["http://localhost:5173", process.env.CLIENT_URL];
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: AllowedOrigin,
     methods: ["POST", "GET", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
