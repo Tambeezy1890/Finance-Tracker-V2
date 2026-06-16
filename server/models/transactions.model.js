@@ -33,7 +33,6 @@ const transactionSchema = new mongoose.Schema(
         "travel",
         "utilities",
         "household",
-        "salary",
         "lifestyle",
         "health",
         "other",
