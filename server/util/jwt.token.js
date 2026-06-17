@@ -46,6 +46,7 @@ export const generateToken = async (user, statusCode, res) => {
         email: user.email,
         role: user.role,
         isEmailVerified: user.isEmailVerified,
+        createdAt: user.createdAt,
       },
     });
 };

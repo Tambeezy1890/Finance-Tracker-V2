@@ -2,12 +2,12 @@ import React from "react";
 import OverviewHeader from "./OverviewHeader";
 import { ArrowUpDown, ChartNoAxesColumn, Ellipsis, Filter } from "lucide-react";
 
-function SalesOverview() {
+function MonthlyOverview() {
   return (
     <div className="w-full p-4">
       <OverviewHeader
         icon1={<ChartNoAxesColumn size={14} />}
-        name="Sales Overview"
+        name="Monthly Overview"
         icon2={<Filter size={14} />}
         icon3={<ArrowUpDown size={14} />}
         icon4={<Ellipsis size={14} />}
@@ -20,4 +20,4 @@ function SalesOverview() {
   );
 }
 
-export default SalesOverview;
+export default MonthlyOverview;

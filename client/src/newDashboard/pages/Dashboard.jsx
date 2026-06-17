@@ -18,7 +18,7 @@ function Dashboard() {
         <Navbar setSidebar={setSidebar} sidebar={sidebar} />
 
         <div
-          className={`grid h-[calc(100%-96px)] px-4 grid-cols-1 bg-transparent ${
+          className={`grid h-[calc(100%-96px)] px-4 grid-cols-1 bg-transparent gap-4 ${
             sidebarOpen
               ? "lg:grid-cols-[250px_minmax(0,1fr)]"
               : "lg:grid-cols-1"
@@ -41,7 +41,7 @@ function Dashboard() {
             </div>
           </aside>
 
-          <main className="h-full overflow-y-auto scrollbar-none bg-slate-50  rounded-2xl pb-20 lg:pb-4">
+          <main className="h-full overflow-y-auto scrollbar-none bg-slate-50 pt-2 rounded-2xl pb-20 lg:pb-4">
             <Outlet />
           </main>
         </div>

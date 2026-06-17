@@ -30,15 +30,16 @@ function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [sidebar, setSidebar] = useState(false);
-
   const emailVerified = user.data?.isEmailVerified || user.isEmailVerified;
   const username = user.data?.username || user?.name;
   const email = user.data?.email || user?.email;
   const role = user.data?.role || user.role;
   const createdAt =
     user.data?.createdAt.slice(0, 10) || user?.createdAt.slice(0, 10);
+
   const name = useEffect(() => {
     fetchDashoardData();
+    console.log(user);
   }, []);
 
   const fetchDashoardData = async () => {

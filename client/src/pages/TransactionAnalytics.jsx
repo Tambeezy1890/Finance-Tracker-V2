@@ -36,68 +36,6 @@ function TransactionsAnalytics() {
     fetchTransactions();
   }, []);
 
-  const analytics = useMemo(() => {
-    const income = transactions
-      .filter((item) => item.type === "income")
-      .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-    const expenses = transactions
-      .filter((item) => item.type === "expense")
-      .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-    const categoryTotals = {};
-
-    transactions
-      .filter((item) => item.type === "expense")
-      .forEach((item) => {
-        categoryTotals[item.category] =
-          (categoryTotals[item.category] || 0) + Number(item.amount || 0);
-      });
-
-    const categoryData = Object.entries(categoryTotals).map(
-      ([category, amount]) => ({
-        category,
-        amount,
-      })
-    );
-
-    const monthlyTotals = {};
-
-    transactions.forEach((item) => {
-      const month = new Date(item.date).toLocaleString("default", {
-        month: "short",
-      });
-
-      if (!monthlyTotals[month]) {
-        monthlyTotals[month] = {
-          month,
-          income: 0,
-          expenses: 0,
-        };
-      }
-
-      if (item.type === "income") {
-        monthlyTotals[month].income += Number(item.amount || 0);
-      } else {
-        monthlyTotals[month].expenses += Number(item.amount || 0);
-      }
-    });
-
-    return {
-      income,
-      expenses,
-      balance: income - expenses,
-      categoryData,
-      monthlyData: Object.values(monthlyTotals),
-    };
-  }, [transactions]);
-
-  const formatMoney = (value) =>
-    new Intl.NumberFormat("en-ZA", {
-      style: "currency",
-      currency: "ZAR",
-    }).format(value);
-
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <main className="px-8 md:px-16 lg:px-28 py-8">

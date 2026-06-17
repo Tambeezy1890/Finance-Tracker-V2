@@ -57,7 +57,7 @@ function Sidebar({ sidebar }) {
       name: "product",
       icon: <ShoppingBag size={18} />,
       value: "Product",
-      to: "/transactions",
+      to: "#",
     },
     {
       section: "tools",

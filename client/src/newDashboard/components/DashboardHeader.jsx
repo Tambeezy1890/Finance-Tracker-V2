@@ -4,7 +4,7 @@ import React from "react";
 function DashboardHeader() {
   return (
     <div className="w-full bg-slate-100 p-4 rounded-3xl shadow-sm">
-      <div className="flex justify-between">
+      <div className="flex justify-between ">
         <div className="flex-2 ">Dashboard</div>
         <div className="flex-1">
           <div className="flex gap-2 text-[12px] justify-center items-center">

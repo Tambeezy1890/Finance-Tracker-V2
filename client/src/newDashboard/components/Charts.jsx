@@ -10,9 +10,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import React from "react";
 
-function Charts({ show }) {
+function Charts({ show, data = [] }) {
   const revenueData = [
     {
       month: "Jan",
@@ -91,7 +90,7 @@ function Charts({ show }) {
         <div className="bg-slate-50 rounded-3xl shadow-md p-6 border border-slate-100">
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-slate-800">
-              Revenue Analytics
+              Income vs Expenses
             </h2>
 
             <p className="text-sm text-slate-400">
@@ -101,7 +100,7 @@ function Charts({ show }) {
 
           <ResponsiveContainer width="100%" height={300}>
             <LineChart
-              data={revenueData}
+              data={data}
               margin={{
                 top: 10,
                 right: 10,
@@ -137,7 +136,7 @@ function Charts({ show }) {
 
               <Line
                 type="monotone"
-                dataKey="revenue"
+                dataKey="income"
                 stroke="#6366f1"
                 strokeWidth={3}
                 dot={{
@@ -151,7 +150,7 @@ function Charts({ show }) {
 
               <Line
                 type="monotone"
-                dataKey="users"
+                dataKey="expenses"
                 stroke="#06b6d4"
                 strokeWidth={3}
                 dot={{
@@ -166,7 +165,7 @@ function Charts({ show }) {
         <div className="bg-slate-50 rounded-3xl shadow-md p-6 border border-slate-100">
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-slate-800">
-              Traffic Overview
+              Expense Categories
             </h2>
 
             <p className="text-sm text-slate-400">
@@ -176,7 +175,7 @@ function Charts({ show }) {
 
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart
-              data={trafficData}
+              data={data}
               margin={{
                 top: 10,
                 right: 10,
@@ -201,7 +200,7 @@ function Charts({ show }) {
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
 
               <XAxis
-                dataKey="day"
+                dataKey="category"
                 tick={{ fill: "#64748b" }}
                 axisLine={false}
                 tickLine={false}
@@ -226,7 +225,7 @@ function Charts({ show }) {
 
               <Area
                 type="monotone"
-                dataKey="visitors"
+                dataKey="amount"
                 stroke="#6366f1"
                 fillOpacity={1}
                 fill="url(#visitors)"
@@ -235,7 +234,7 @@ function Charts({ show }) {
 
               <Area
                 type="monotone"
-                dataKey="conversions"
+                dataKey="budget"
                 stroke="#14b8a6"
                 fillOpacity={1}
                 fill="url(#conversions)"
