@@ -13,13 +13,6 @@ function Navbar({ setSidebar, sidebar }) {
 
   const navigate = useNavigate();
 
-  const handleLogout = async (e) => {
-    await logout();
-    toast.success("Logged out");
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
-  };
   return (
     <div className="bg-white border-b border-slate-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,12 +48,6 @@ function Navbar({ setSidebar, sidebar }) {
                 </div>
               </a>
             </div>
-            <button
-              className="text-slate-400 hover:bg-rose-50 hover:text-rose-500 p-2 rounded-lg transition-all"
-              onClick={handleLogout}
-            >
-              <LogOut size={20} />
-            </button>
           </div>
         </div>
       </div>

@@ -29,7 +29,7 @@ function Login() {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = location.state?.from?.pathname || "";
 
   const { email, password, rememberMe } = data;
   const handleSubmit = async (e) => {
@@ -40,7 +40,12 @@ function Login() {
     try {
       const response = await login({ email, password });
       toast.success(`Welcome back ${response.data.user.name.split(" ")[0]}!`);
-      navigate(from, { replace: true });
+      const user = response.data.user;
+
+      const redirectPath =
+        from || (user.role === "admin" ? "/admin-dashboard" : "/dashboard");
+
+      navigate(redirectPath, { replace: true });
       return response;
     } catch (err) {
       const message =

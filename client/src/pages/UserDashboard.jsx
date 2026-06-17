@@ -13,7 +13,7 @@ import {
   User,
   UserIcon,
 } from "lucide-react";
-import Navbar from "../components/NavBar";
+
 import StatTile from "../components/StatTile";
 import ProfileRow from "../components/ProfileRow";
 import SecurityItem from "../components/SecurityItem";
@@ -22,9 +22,8 @@ import { useState } from "react";
 import authService from "../services/api";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
-import SideBar from "../components/SideBar";
 
-function Dashboard() {
+function UserDashboard() {
   const { user, currentUser } = useAuthContext();
 
   const [dashboardData, setDashboardData] = useState(null);
@@ -32,7 +31,13 @@ function Dashboard() {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [sidebar, setSidebar] = useState(false);
 
-  useEffect(() => {
+  const emailVerified = user.data?.isEmailVerified || user.isEmailVerified;
+  const username = user.data?.username || user?.name;
+  const email = user.data?.email || user?.email;
+  const role = user.data?.role || user.role;
+  const createdAt =
+    user.data?.createdAt.slice(0, 10) || user?.createdAt.slice(0, 10);
+  const name = useEffect(() => {
     fetchDashoardData();
   }, []);
 
@@ -69,14 +74,12 @@ function Dashboard() {
     <>
       {user && (
         <div className="min-h-screen bg-[#f8fafc]">
-          <Navbar setSidebar={setSidebar} sidebar={sidebar} />
-          {sidebar && <SideBar />}
           <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 py-10">
             {/* Welcome */}
             <div className="flex flex-col mb-8 md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">
-                  Welcome, {user.name}
+                  Welcome, {username}
                 </h1>
                 <p className="mt-1 text-slate-500 font-medium">
                   Realtime security oversight and profile management
@@ -84,12 +87,12 @@ function Dashboard() {
               </div>
               <div className="text-[10px] font-black text-slate-400 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-400 uppercase tracking-widest">
                 Identity Node: {}
-                {user.role}
+                {role}
               </div>
             </div>
             {/* Verification alret */}
             {/* Conditional rendering */}
-            {user.isEmailVerified ? (
+            {emailVerified ? (
               <></>
             ) : (
               <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex md:flex-row rounded-4xl gap-4 items-center">
@@ -138,8 +141,8 @@ function Dashboard() {
               <StatTile
                 icon={<ShieldCheck size={18} />}
                 label="Identity"
-                color={user.isEmailVerified ? "emerald" : "amber"}
-                value={user.isEmailVerified ? "Verified" : "Pending"}
+                color={emailVerified ? "emerald" : "amber"}
+                value={emailVerified ? "Verified" : "Pending"}
               />
               <StatTile
                 icon={<Fingerprint size={18} />}
@@ -166,7 +169,7 @@ function Dashboard() {
                       {/*  <img src="" alt="" className="w-full object-cover h-full" /> */}
                       {/* conditional rendering */}
                       <span className="text-3xl font-black text-slate-300 text-center">
-                        {user.name}
+                        {username}
                       </span>
                     </div>
                     <button className="absolute -right-2 -bottom-2 bg-indigo-600 p-2 rounded-xl text-white shadow-lg hover:scale-110 transition-transform">
@@ -176,27 +179,27 @@ function Dashboard() {
                   <div className="flex-1 w-full space-y-1">
                     <ProfileRow
                       label="Legal Name"
-                      value={user.name}
+                      value={username}
                       icon={<User />}
                       size={16}
                     />
                     <ProfileRow
                       label="Email Address"
-                      value={user.email}
+                      value={email}
                       icon={<Mail />}
                       size={16}
                       badge={"bg-rose-50 text-rose-600"}
                     />
                     <ProfileRow
                       label="Access Level"
-                      value={user.role}
+                      value={role}
                       icon={<Lock />}
                       size={16}
                       badge={"bg-indigo-50 text-indigo-600"}
                     />
                     <ProfileRow
                       label="Registered"
-                      value={`${currentUser.createdAt.slice(0, 10)}`}
+                      value={createdAt}
                       icon={<RefreshCcw />}
                       size={16}
                     />
@@ -247,4 +250,4 @@ function Dashboard() {
     </>
   );
 }
-export default Dashboard;
+export default UserDashboard;

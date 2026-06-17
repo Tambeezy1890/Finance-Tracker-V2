@@ -3,6 +3,7 @@ import { useAuthContext } from "../contexts/AuthContexts";
 
 function PublicRoute({ children }) {
   const { isAuthenticated, isLoading, user } = useAuthContext();
+
   const location = useLocation();
 
   if (isLoading) {

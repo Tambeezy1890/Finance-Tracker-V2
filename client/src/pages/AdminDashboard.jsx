@@ -28,7 +28,6 @@ function AdminDashboard() {
   const [deleteModel, setDeleteModel] = useState({ show: false, user: null });
   const [deleting, setDeleting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sidebar, setSidebar] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
 
   const fetchAdminData = useCallback(async () => {
@@ -121,13 +120,7 @@ function AdminDashboard() {
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">
-      <Navbar setSidebar={setSidebar} sidebar={sidebar} />
-      {<SideBar sidebar={sidebar} />}
-
-      <main
-        className={`max-w-7xl mx-auto px-4 sm:px-8 lg:px-8 py-10 
-    sidebar ? "lg:ml-64" : ""`}
-      >
+      <main className={`max-w-7xl mx-auto px-4 sm:px-8 lg:px-8 `}>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tight">

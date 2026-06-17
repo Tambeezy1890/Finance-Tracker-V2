@@ -1,5 +1,5 @@
 import express from "express";
-import { PORT } from "./config/env.js";
+import { NODE_ENV, PORT } from "./config/env.js";
 import connectDatabase from "./config/mongodb.js";
 import authRoute from "./routes/auth.route.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
@@ -32,5 +32,6 @@ app.use(errorMiddleware);
 
 app.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);
+  console.log(`Connected in ${NODE_ENV}`);
   await connectDatabase();
 });

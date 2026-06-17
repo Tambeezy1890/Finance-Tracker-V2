@@ -1,12 +1,20 @@
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === "true";
+const MODE = import.meta.env.MODE;
 
 const api = axios.create({
-  baseURL: "https://finance-tracker-v2-production-a80e.up.railway.app",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
 });
+const mockUser = {
+  username: "Dev User",
+  email: "dev@test.com",
+  role: "admin",
+};
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("access-token");
@@ -34,8 +42,14 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.post("/auth/v2/refresh-token");
+        const refreshResponse = await api.post("/auth/v2/refresh-token");
 
+        const newAccessToken = refreshResponse.data.accessToken;
+
+        if (newAccessToken) {
+          localStorage.setItem("access-token", newAccessToken);
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
         return api(originalRequest);
       } catch (refreshError) {
         localStorage.clear();
@@ -55,6 +69,19 @@ const authService = {
   register: async (userData) => {
     const response = await api.post("/auth/v2/signup", { ...userData });
     return response;
+  },
+  refreshToken: async () => {
+    const response = await api.post("/auth/v2/refresh-token");
+
+    if (response.data.accessToken) {
+      localStorage.setItem("access-token", response.data.accessToken);
+    }
+
+    if (response.data.user) {
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+    }
+
+    return response.data;
   },
   resend: async (email) => {
     const response = await api.post("/auth/v2/resend-token", { email });

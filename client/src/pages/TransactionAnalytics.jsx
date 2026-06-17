@@ -14,11 +14,8 @@ import {
   Line,
 } from "recharts";
 import authService from "../services/api";
-import Navbar from "../components/NavBar";
-import SideBar from "../components/SideBar";
 
 function TransactionsAnalytics() {
-  const [sidebar, setSidebar] = useState(false);
   const [transactions, setTransactions] = useState([]);
 
   const COLORS = [
@@ -103,9 +100,6 @@ function TransactionsAnalytics() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <Navbar setSidebar={setSidebar} sidebar={sidebar} />
-      {sidebar && <SideBar />}
-
       <main className="px-8 md:px-16 lg:px-28 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-black text-slate-800">

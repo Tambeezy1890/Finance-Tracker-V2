@@ -36,7 +36,7 @@ export const generateToken = async (user, statusCode, res) => {
 
   return res
     .status(statusCode)
-    .cookie("refreshToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json({
       success: true,
       accessToken,

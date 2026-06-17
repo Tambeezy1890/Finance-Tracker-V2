@@ -8,13 +8,15 @@ import EmailSent from "./pages/EmailSent";
 import Verification from "./pages/Verification";
 import ForgotPass from "./pages/ForgotPass";
 import ResetPass from "./pages/ResetPass";
-import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoute from "./components/PublicRoute";
 import RoleBasedRoute from "./components/RoleBasedRoute";
 import FinanceDashboard from "./pages/FinanceDashboard";
 import TransactionsAnalytics from "./pages/TransactionAnalytics";
+import Dashboard from "./newDashboard/pages/Dashboard";
+import Analytics from "./newDashboard/components/Analytics";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   return (
@@ -42,13 +44,14 @@ function App() {
           },
 
           error: {
-            duration: 5000,
+            duration: 3000,
             iconTheme: {
               primary: "red",
               secondary: "white",
             },
           },
         }}
+        className="z-1000"
       />
       <Routes>
         <Route path="/" element={<Navigate to="/login" />}></Route>
@@ -68,28 +71,28 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPass />}></Route>
         {/* private routes */}
         <Route
-          path="/dashboard"
-          element={<ProtectedRoutes>{<Dashboard />}</ProtectedRoutes>}
-        />
-        <Route
-          path="/admin-dashboard"
-          element={
-            <RoleBasedRoute requiredRole="admin">
-              <AdminDashboard />
-            </RoleBasedRoute>
-          }
-        />
-        <Route
-          path="/finance"
           element={
             <ProtectedRoutes>
-              {" "}
-              <FinanceDashboard />{" "}
+              <Dashboard />
             </ProtectedRoutes>
           }
-        />
-        <Route path="/transactions" element={<TransactionsAnalytics />} />
-        <Route path="*" element={<Navigate to="/login" />} replace></Route>
+        >
+          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/finance" element={<FinanceDashboard />} />
+          <Route path="/transactions" element={<TransactionsAnalytics />} />
+        </Route>
+
+        {/* private admin route */}
+        <Route
+          element={
+            <RoleBasedRoute requiredRole="admin">
+              <Dashboard />
+            </RoleBasedRoute>
+          }
+        >
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </>
   );

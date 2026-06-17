@@ -119,7 +119,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 export const logoutUser = asyncHandler(async (req, res, next) => {
-  res.cookie("token", "none", {
+  res.cookie("refreshToken", "", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
@@ -127,7 +127,7 @@ export const logoutUser = asyncHandler(async (req, res, next) => {
 });
 
 export const generateNewAccessToken = asyncHandler(async (req, res, next) => {
-  const { token } = req.cookies.refreshToken;
+  const token = req.cookies.refreshToken;
   if (!token) {
     throw new ApiError(400, "Missing refersh token");
   }

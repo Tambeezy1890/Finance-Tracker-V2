@@ -4,8 +4,10 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { TriangleAlert } from "lucide-react";
 
 function RoleBasedRoute({ children, requiredRole }) {
-  const { user, isAuthenticated, isLoading } = useAuthContext();
+  const { currentUser, isAuthenticated, isLoading, user } = useAuthContext();
   const navigate = useNavigate();
+  const role = user?.data?.role || user?.role;
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f8fafc]">
@@ -16,11 +18,11 @@ function RoleBasedRoute({ children, requiredRole }) {
       </div>
     );
   }
-  if (!user) {
-    return <Navigate to="/login" />;
+  if (!isAuthenticated || !currentUser) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (user.role !== requiredRole) {
+  if (role !== requiredRole) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f8fafc]">
         <div className="max-w-md w-full rounded-4xl shadow-xl p-8 bg-white">
@@ -39,7 +41,7 @@ function RoleBasedRoute({ children, requiredRole }) {
                 You do not have the required permissions{" "}
               </h3>
               <div className="p-4  bg-slate-100 rounded-lg mt-4 shadow-md">
-                <p className="text-[12px] font-medium tracking-tight">
+                <div className="text-[12px] font-medium tracking-tight">
                   You do not have permission to access the current resource
                   <br />
                   <div>
@@ -48,7 +50,7 @@ function RoleBasedRoute({ children, requiredRole }) {
                       {user.role}
                     </span>
                   </div>
-                </p>
+                </div>
               </div>
             </div>
             <Link

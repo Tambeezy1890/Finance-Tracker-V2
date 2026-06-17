@@ -65,7 +65,6 @@ function Transactions({
         date: transactionData.transaction.date,
         amount: transactionData.transaction.amount,
       });
-      console.log(transactionData);
     }
   }, [transactionData]);
 

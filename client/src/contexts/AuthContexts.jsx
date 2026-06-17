@@ -23,20 +23,25 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       try {
         const token = localStorage.getItem("access-token");
-        const storedUser = authService.getUser();
 
-        if (!token || !storedUser) {
+        if (!token) {
+          const refreshed = await authService.refreshToken();
+
+          if (refreshed?.user) {
+            setUser(refreshed.user);
+            setCurrentUser(refreshed.user);
+          }
+
           setIsLoading(false);
           return;
         }
+
         const response = await authService.getCurrentUser();
         const userData = response?.user || response;
-        storedUser ? setUser(storedUser) : setUser(userData);
-        setCurrentUser(response.data);
+
+        setUser(userData);
+        setCurrentUser(userData);
       } catch (err) {
-        const message =
-          err.response?.data?.message || "Failed to get user data";
-        toast.error(message);
         localStorage.removeItem("access-token");
         localStorage.removeItem("user");
         setUser(null);
@@ -44,6 +49,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
       }
     };
+
     initAuth();
   }, []);
 
@@ -51,7 +57,10 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const response = await authService.login(data);
-      setUser((await response).data.user);
+      const userData = response.data.user;
+
+      setUser(userData);
+      setCurrentUser(userData);
       return response;
     } catch (error) {
       const message = error.response?.data?.message || "Login failed";

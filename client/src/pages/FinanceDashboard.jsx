@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Navbar from "../components/NavBar";
-import SideBar from "../components/SideBar";
 import StatTile from "../components/StatTile";
 import authService from "../services/api";
 import { toast } from "react-hot-toast";
@@ -8,7 +6,6 @@ import { Trash2, Edit, Plus, Loader2, AlertTriangle } from "lucide-react";
 import Transactions from "../components/Transactions";
 
 function FinanceDashboard() {
-  const [sidebar, setSidebar] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -131,10 +128,6 @@ function FinanceDashboard() {
   const updateT = (id) => {};
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <Navbar setSidebar={setSidebar} sidebar={sidebar} />
-
-      {<SideBar sidebar={sidebar} />}
-
       <main className="w-full mt-4 px-8 md:px-16 lg:px-28">
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatTile
