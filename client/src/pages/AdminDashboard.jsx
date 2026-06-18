@@ -147,7 +147,7 @@ function AdminDashboard() {
         {currentUser.isEmailVerified ? (
           <></>
         ) : (
-          <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex md:flex-row rounded-4xl gap-4 items-center">
+          <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex flex-col   md:flex-row rounded-4xl gap-4 items-center">
             <div className="flex items-center justify-center bg-amber-100 w-10 h-10 rounded-2xl text-amber-400 shrink-0 shadow-sm">
               <AlertCircle size={24} />
             </div>
@@ -178,7 +178,7 @@ function AdminDashboard() {
             </button>
           </div>
         )}
-        <div className="grid grid-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className=" md:grid grid-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatTile
             icon={<User size={18} />}
             color="blue"
@@ -197,12 +197,14 @@ function AdminDashboard() {
             label="Privileged"
             value={adminCount}
           />
-          <StatTile
-            icon={<ActivityIcon size={18} />}
-            color="slate"
-            label="Status"
-            value="Secured"
-          />
+          <div className="hidden md:block">
+            <StatTile
+              icon={<ActivityIcon size={18} />}
+              color="slate"
+              label="Status"
+              value="Secured"
+            />
+          </div>
         </div>
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
           <div className="px-8 py-4 border-b border-slate-50 flex items-center justify-between">

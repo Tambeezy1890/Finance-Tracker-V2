@@ -1,8 +1,8 @@
 function ProfileRow({ label, value, icon, badge }) {
   return (
     <div
-      className="flex items-center justify-between 
-            py-5 border-b border-slate-50 last:border-0"
+      className="flex items-center gap-1 md:justify-between 
+            py-5 border-b border-slate-50 last:border-0 flex-wrap"
     >
       <div className="flex items-center gap-4">
         <div className="text-slate-300">{icon}</div>
@@ -11,7 +11,7 @@ function ProfileRow({ label, value, icon, badge }) {
         </span>
       </div>
       <span
-        className={`text-sm font-black px-4 py-1.5 rounded-xl ${badge || "text-slate-900 bg-slate"}`}
+        className={`text-sm font-black px-4 py-1.5 rounded-xl ${badge || "text-slate-900 bg-slate"} `}
       >
         {value}
       </span>

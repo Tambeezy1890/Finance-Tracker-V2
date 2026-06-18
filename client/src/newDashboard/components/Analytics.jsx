@@ -122,14 +122,14 @@ function Analytics() {
           </div>
         ))}
       </div>
-      <div className="flex mt-4 gap-2 md:flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row gap-4 mt-4 min-w-0 w-full">
         <div className="flex-2 bg-slate-200/50 rounded-lg ">
           <MonthlyOverview />
           <Charts show="line" data={analytics.monthlyData} />
         </div>
         <div className="flex-1 bg-slate-100/50 rounded-2xl p-4 border border-slate-200 lg:mt-0 md:mt-4">
           <CategoryBreakdown />
-          <div className="mt-4">
+          <div className="mt-4 min-w-0 w-full">
             <Charts data={analytics.categoryData} />
           </div>
         </div>

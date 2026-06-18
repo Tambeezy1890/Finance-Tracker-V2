@@ -17,7 +17,7 @@ export default function StatTile({ icon, label, value, color }) {
       <div className="flex items-center gap-4 ">
         <div className={`p-3.5 rounded-2xl ${colorMap[color]}`}>{icon}</div>
         <div>
-          <p className="text-[10px] text-slate-400 font-medium tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <p className="text-[10px] text-slate-400 font-medium tracking-widest uppercase opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {label}
           </p>
           <p className="text-md text-slate-600 font-medium uppercase tracking-tight ">

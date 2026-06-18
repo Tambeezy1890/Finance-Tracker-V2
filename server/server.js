@@ -30,8 +30,17 @@ app.use("/finances/v2", transactionRouter);
 
 app.use(errorMiddleware);
 
-app.listen(PORT, async () => {
-  console.log(`http://localhost:${PORT}`);
-  console.log(`Connected in ${NODE_ENV}`);
-  await connectDatabase();
-});
+const startServer = async () => {
+  try {
+    await connectDatabase();
+
+    app.listen(PORT, () => {
+      console.log(`Server running on ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Startup failed:", err);
+    process.exit(1);
+  }
+};
+
+startServer();

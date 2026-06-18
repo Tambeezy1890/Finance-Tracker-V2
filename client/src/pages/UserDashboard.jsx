@@ -96,7 +96,7 @@ function UserDashboard() {
             {emailVerified ? (
               <></>
             ) : (
-              <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex md:flex-row rounded-4xl gap-4 items-center">
+              <div className="mb-8 bg-amber-50 p-6 border border-amber-100 flex flex-col md:flex-row rounded-4xl gap-4 items-center">
                 <div className="flex items-center justify-center bg-amber-100 w-10 h-10 rounded-2xl text-amber-400 shrink-0 shadow-sm">
                   <AlertCircle size={24} />
                 </div>
@@ -164,7 +164,7 @@ function UserDashboard() {
                   </button>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-12 items-center md:items-start">
+                <div className="flex flex-col md:flex-row gap-12 items-center md:items-start overflow-hidden">
                   <div className="relative group">
                     <div className="flex items-center justify-center w-32 h-32 rounded-3xl bg-slate-100 border-4 border-white shadow-xl overflow-hidden">
                       {/*  <img src="" alt="" className="w-full object-cover h-full" /> */}
@@ -177,7 +177,7 @@ function UserDashboard() {
                       <Camera size={18} />
                     </button>
                   </div>
-                  <div className="flex-1 w-full space-y-1">
+                  <div className="flex-1 w-full space-y-1 ">
                     <ProfileRow
                       label="Legal Name"
                       value={username}

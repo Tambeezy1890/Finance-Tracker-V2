@@ -136,19 +136,19 @@ function FinanceDashboard() {
             color="blue"
           />
           <StatTile
-            value="Budget"
-            label={formatMoney(totals.budget)}
+            value="Expense"
+            label={formatMoney(totals.expenses)}
             color="amber"
           />
           <StatTile
-            value="Salary"
-            label={formatMoney(totals.salary)}
+            value="income"
+            label={formatMoney(totals.income)}
             color="purple"
           />
         </section>
 
         <section className="mt-10 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+          <div className="flex flex-col md:flex-row gap-2 items-center justify-between px-6 py-5 border-b border-slate-100">
             <div>
               <h2 className="text-xl font-bold text-slate-800">
                 Recent Transactions
