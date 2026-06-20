@@ -6,6 +6,8 @@ import { errorMiddleware } from "./middleware/error.middleware.js";
 import cors from "cors";
 import transactionRouter from "./routes/transactions.route.js";
 import cookieParser from "cookie-parser";
+import router from "./routes/files.route.js";
+import files from "./routes/files.route.js";
 const app = express();
 
 app.use(express.json());
@@ -27,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth/v2", authRoute);
 app.use("/finances/v2", transactionRouter);
+app.use("/files/v2", files);
 
 app.use(errorMiddleware);
 

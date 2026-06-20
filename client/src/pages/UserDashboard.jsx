@@ -164,7 +164,7 @@ function UserDashboard() {
                   </button>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-12 items-center md:items-start overflow-hidden">
+                <div className="flex flex-col md:flex-row gap-12 items-center md:items-start ">
                   <div className="relative group">
                     <div className="flex items-center justify-center w-32 h-32 rounded-3xl bg-slate-100 border-4 border-white shadow-xl overflow-hidden">
                       {/*  <img src="" alt="" className="w-full object-cover h-full" /> */}

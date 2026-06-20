@@ -9,6 +9,9 @@ import authService from "../../services/api";
 
 function Analytics() {
   const [transactions, setTransactions] = useState([]);
+  const [period, setPeriod] = useState("monthly");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -18,35 +21,70 @@ function Analytics() {
 
     fetchTransactions();
   }, []);
+  const visibleTransactions = useMemo(() => {
+    return transactions.filter((item) => {
+      const matchesType = typeFilter === "all" || item.type === typeFilter;
 
+      const matchesDate =
+        !selectedDate ||
+        new Date(item.date).toISOString().slice(0, 10) === selectedDate;
+
+      return matchesType && matchesDate;
+    });
+  }, [transactions, typeFilter, selectedDate]);
   const analytics = useMemo(() => {
-    const income = transactions
+    const income = visibleTransactions
       .filter((item) => item.type === "income")
       .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-    const expenses = transactions
+    const expenses = visibleTransactions
       .filter((item) => item.type === "expense")
       .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
     const categoryTotals = {};
 
-    transactions
+    visibleTransactions
       .filter((item) => item.type === "expense")
       .forEach((item) => {
         categoryTotals[item.category] =
           (categoryTotals[item.category] || 0) + Number(item.amount || 0);
       });
+    const monthlyCategoryTotals = {};
 
-    const categoryData = Object.entries(categoryTotals).map(
-      ([category, amount]) => ({
+    visibleTransactions
+      .filter((item) => item.type === "expense")
+      .forEach((item) => {
+        const month = new Date(item.date).toLocaleString("default", {
+          month: "short",
+        });
+
+        if (!monthlyCategoryTotals[month]) {
+          monthlyCategoryTotals[month] = { month };
+        }
+
+        monthlyCategoryTotals[month][item.category] =
+          (monthlyCategoryTotals[month][item.category] || 0) +
+          Number(item.amount || 0);
+      });
+
+    const monthlyCategoryData = Object.values(monthlyCategoryTotals);
+    const categories = [
+      ...new Set(
+        visibleTransactions
+          .filter((item) => item.type === "expense")
+          .map((item) => item.category)
+      ),
+    ];
+
+    const categoryData = Object.entries(categoryTotals)
+      .map(([category, amount]) => ({
         category,
         amount,
-      })
-    );
-
+      }))
+      .sort((a, b) => a.amount - b.amount);
     const monthlyTotals = {};
 
-    transactions.forEach((item) => {
+    visibleTransactions.forEach((item) => {
       const month = new Date(item.date).toLocaleString("default", {
         month: "short",
       });
@@ -72,8 +110,11 @@ function Analytics() {
       balance: income - expenses,
       categoryData,
       monthlyData: Object.values(monthlyTotals),
+      income,
+      monthlyCategoryData,
+      categories,
     };
-  }, [transactions]);
+  }, [visibleTransactions]);
 
   const formatMoney = (value) =>
     new Intl.NumberFormat("en-ZA", {
@@ -107,7 +148,14 @@ function Analytics() {
   return (
     <div className="max-w-full  ">
       <div className="mx-4 ">
-        <DashboardHeader />
+        <DashboardHeader
+          period={period}
+          setPeriod={setPeriod}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+        />
       </div>
       <div className="flex gap-6 overflow-x-auto mt-8  scrollbar-none justify-evenly">
         {summaries.map((summary) => (
@@ -130,7 +178,7 @@ function Analytics() {
         <div className="flex-1 bg-slate-100/50 rounded-2xl p-4 border border-slate-200 lg:mt-0 md:mt-4">
           <CategoryBreakdown />
           <div className="mt-4 min-w-0 w-full">
-            <Charts data={analytics.categoryData} />
+            <Charts show="bar" data={analytics.categoryData} />
           </div>
         </div>
       </div>

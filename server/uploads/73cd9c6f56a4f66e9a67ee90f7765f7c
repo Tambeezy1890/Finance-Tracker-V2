@@ -1,0 +1,26 @@
+ nano transactions.csv >> title,description,category,type,amount,date
+January Salary,Monthly salary,salary,income,25000,2026-01-05
+Rent Payment,Apartment rent,household,expense,8000,2026-01-06
+Groceries,Weekly groceries,food,expense,1200,2026-01-08
+Netflix Subscription,Streaming 
+service,entertainment,expense,200,2026-01-10
+Fuel,Car fuel,travel,expense,1500,2026-01-12
+Freelance Work,Website project,salary,income,5000,2026-02-01
+Electricity Bill,Monthly electricity,utilities,expense,950,2026-02-03
+Dinner Out,Restaurant visit,food,expense,650,2026-02-05
+Gym Membership,Fitness subscription,health,expense,450,2026-02-07
+Bonus,Performance bonus,salary,income,10000,2026-03-01
+Movie Tickets,Cinema outing,entertainment,expense,300,2026-03-03
+Uber Ride,Transport costs,travel,expense,180,2026-03-04
+Internet Bill,Fibre connection,utilities,expense,899,2026-03-06
+New Shoes,Clothing purchase,lifestyle,expense,1200,2026-03-10
+Side Hustle Income,Online sales,salary,income,3500,2026-04-02
+Medical Checkup,Doctor visit,health,expense,700,2026-04-05
+House Supplies,Cleaning products,household,expense,450,2026-04-08
+Coffee Shop,Coffee and snacks,food,expense,150,2026-04-09
+Vacation Savings,Transfer to savings,other,expense,3000,2026-05-01
+Salary,Monthly salary,salary,income,25000,2026-05-05
+Flight Booking,Holiday travel,travel,expense,4500,2026-05-10
+Concert Ticket,Live event,entertainment,expense,1200,2026-05-12           
+<....
+

@@ -1,0 +1,27 @@
+title,description,category,amount,type,date
+January Salary,Monthly salary,salary,25000,income,2026-01-05
+Rent Payment,Monthly apartment rent,household,8000,expense,2026-01-06
+Groceries,Weekly groceries,food,1200,expense,2026-01-08
+Netflix Subscription,Streaming 
+service,entertainment,200,expense,2026-01-10
+Fuel,Car fuel,travel,1500,expense,2026-01-12
+Freelance Project,Website project,salary,5000,income,2026-02-01
+Electricity Bill,Monthly electricity,utilities,950,expense,2026-02-03
+Dinner Out,Restaurant visit,food,650,expense,2026-02-05
+Gym Membership,Fitness subscription,health,450,expense,2026-02-07
+Performance Bonus,Quarterly bonus,salary,10000,income,2026-03-01
+Movie Tickets,Cinema outing,entertainment,300,expense,2026-03-03
+Uber Ride,Transport costs,travel,180,expense,2026-03-04
+Internet Bill,Fibre connection,utilities,899,expense,2026-03-06
+New Shoes,Clothing purchase,lifestyle,1200,expense,2026-03-10
+Side Hustle Income,Online sales,salary,3500,income,2026-04-02
+Medical Checkup,Doctor visit,health,700,expense,2026-04-05
+House Supplies,Cleaning products,household,450,expense,2026-04-08
+Coffee Shop,Coffee and snacks,food,150,expense,2026-04-09
+Vacation Savings,Savings contribution,other,3000,expense,2026-05-01
+Monthly Salary,Monthly salary,salary,25000,income,2026-05-05
+Flight Booking,Holiday travel,travel,4500,expense,2026-05-10
+Concert Ticket,Live event,entertainment,1200,expense,2026-05-12
+Monthly Salary,Monthly salary,salary,25000,income,2026-06-05
+Laptop Purchase,New work laptop,lifestyle,12000,expense,2026-06-10
+Medical Aid,Monthly contribution,health,2500,expense,2026-06-15

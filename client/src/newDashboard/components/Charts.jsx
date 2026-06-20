@@ -1,6 +1,8 @@
 import {
   Area,
   AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
   Legend,
   Line,
@@ -11,7 +13,7 @@ import {
   YAxis,
 } from "recharts";
 
-function Charts({ show, data = [] }) {
+function Charts({ show, data = [], categories = [] }) {
   const revenueData = [
     {
       month: "Jan",
@@ -169,79 +171,107 @@ function Charts({ show, data = [] }) {
             </h2>
 
             <p className="text-sm text-slate-400">
-              Weekly visitors & conversions
+              Spending grouped by category
             </p>
           </div>
-
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart
-              data={data}
-              margin={{
-                top: 10,
-                right: 10,
-                left: -20,
-                bottom: 0,
-              }}
-            >
-              <defs>
-                <linearGradient id="visitors" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
-
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                </linearGradient>
-
-                <linearGradient id="conversions" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.4} />
-
-                  <stop offset="95%" stopColor="#14b8a6" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-
-              <XAxis
-                dataKey="category"
-                tick={{ fill: "#64748b" }}
-                axisLine={false}
-                tickLine={false}
-              />
-
-              <YAxis
-                tick={{ fill: "#64748b" }}
-                axisLine={false}
-                tickLine={false}
-              />
-
-              <Tooltip
-                contentStyle={{
-                  borderRadius: "16px",
-                  border: "none",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+          {show == "bar" ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={data}
+                layout="vertical"
+                margin={{
+                  top: 10,
+                  right: 20,
+                  left: 10,
+                  bottom: 0,
                 }}
-              />
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
 
-              <Legend />
+                <XAxis
+                  type="number"
+                  tick={{ fill: "#64748b" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
 
-              <Area
-                type="monotone"
-                dataKey="amount"
-                stroke="#6366f1"
-                fillOpacity={1}
-                fill="url(#visitors)"
-                strokeWidth={3}
-              />
+                <YAxis
+                  type="category"
+                  dataKey="category"
+                  width={90}
+                  tick={{ fill: "#64748b" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
 
-              <Area
-                type="monotone"
-                dataKey="budget"
-                stroke="#14b8a6"
-                fillOpacity={1}
-                fill="url(#conversions)"
-                strokeWidth={3}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "16px",
+                    border: "none",
+                    backgroundColor: "#fff",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+                  }}
+                />
+
+                <Bar
+                  dataKey="amount"
+                  fill="#6366f1"
+                  radius={[0, 12, 12, 0]}
+                  barSize={22}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart
+                data={data}
+                margin={{
+                  top: 10,
+                  right: 10,
+                  left: -20,
+                  bottom: 0,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+
+                <XAxis
+                  dataKey="month"
+                  tick={{ fill: "#64748b" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+
+                <YAxis
+                  tick={{ fill: "#64748b" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "16px",
+                    border: "none",
+                    backgroundColor: "#fff",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+                  }}
+                />
+
+                <Legend />
+
+                {categories.map((category, index) => (
+                  <Area
+                    key={category}
+                    type="monotone"
+                    dataKey={category}
+                    stroke={index % 2 === 0 ? "#6366f1" : "#14b8a6"}
+                    fill={index % 2 === 0 ? "#6366f1" : "#14b8a6"}
+                    fillOpacity={0.25}
+                    strokeWidth={3}
+                  />
+                ))}
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
         </div>
       )}
       {/* AREA CHART */}

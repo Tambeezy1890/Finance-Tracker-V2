@@ -35,6 +35,7 @@ const transactionSchema = new mongoose.Schema(
         "household",
         "lifestyle",
         "health",
+        "salary",
         "other",
       ],
     },

@@ -175,7 +175,7 @@ function Transactions({
                 <option value="travel">Travel</option>
                 <option value="health">Health</option>
 
-                <option value="utilities">Utilitiesa</option>
+                <option value="utilities">Utilities</option>
                 <option value="lifestyle">Lifestyle</option>
                 <option value="household">Household</option>
                 <option value="other">Other</option>

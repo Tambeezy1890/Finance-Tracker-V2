@@ -37,7 +37,7 @@ api.interceptors.response.use(
 
     if (
       (status === 401 && !isAuthRoute && !originalRequest._retry) ||
-      error.response?.data?.message.includes("expired")
+      error.response?.data?.message?.includes("expired")
     ) {
       originalRequest._retry = true;
 
@@ -156,6 +156,21 @@ const authService = {
   updatePassword: async (token) => {
     const response = await api.patch(`/reset-password/${token}`);
     return response;
+  },
+  importTransactions: async (formData) => {
+    const res = await api.post("/files/v2/import", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  },
+
+  exportTransactions: async () => {
+    return api.get("/files/v2/export", {
+      responseType: "blob",
+    });
   },
 };
 
